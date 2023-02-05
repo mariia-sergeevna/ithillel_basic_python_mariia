@@ -5,14 +5,15 @@ def calculate_digits_from_string(number: str) -> int:
     return sum_digits
 
 
-def calculate_digits_from_int(number: str) -> int:
+def calculate_digits_from_int(number: int) -> int:
     sum_digits = 0
-    for digit in number:
-        sum_digits += int(digit)
+    while number > 0:
+        sum_digits += number % 10
+        number //= 10
     return sum_digits
 
 
 number = input("Enter number: ")
 
 print(calculate_digits_from_string(number))
-print(calculate_digits_from_int(number))
+print(calculate_digits_from_int(int(number)))
