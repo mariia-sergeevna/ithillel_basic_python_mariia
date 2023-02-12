@@ -32,13 +32,14 @@ def test() -> None:
     result = solve_2equation_in_complex(1, 2, 5)
     print("Result: ", result)
     error_text = "For parameters 1, 2, 5 the result should be (-1+2j) and (-1-2j)"
-    assert result == ((-1 + 2j), (-1 - 2j)), error_text
+    assert result == (
+        (-1 + 2j),
+        (-1 - 2j)
+    ), error_text
 
     result = solve_2equation_in_complex(0, 3, 7)
     print("Result: ", result)
-    error_msg = (
-        "For parameters 0, 3, 7 the result should be 'This is not quadratic equation!'"
-    )
+    error_msg = "For parameters 0, 3, 7 the result should be 'This is not quadratic equation!'"
     assert result == (
         None,
         None,
