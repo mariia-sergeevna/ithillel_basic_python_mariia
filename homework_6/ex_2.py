@@ -6,8 +6,8 @@ def solve_quadratic_equation(a: float, b: float, c: float) -> tuple:
     if discriminant < 0:
         return None, None
     elif discriminant == 0:
-        return (-b)/2*a, None
-    return (-b + sqrt(discriminant))/(2*a), (-b - sqrt(discriminant))/(2*a)
+        return (-b) / 2 * a, None
+    return (-b + sqrt(discriminant)) / (2 * a), (-b - sqrt(discriminant)) / (2 * a)
 
 
 def main() -> None:
@@ -26,18 +26,21 @@ def main() -> None:
 def test() -> None:
     result = solve_quadratic_equation(1, -2, -3)
     print("Result: ", result)
-    assert result == (3.0, -1.0),\
-        "For parameters 1, -2, -3 the result should be 3 and -1"
+    assert result == (
+        3.0,
+        -1.0,
+    ), "For parameters 1, -2, -3 the result should be 3 and -1"
 
     result = solve_quadratic_equation(1, 12, 36)
     print("Result: ", result)
-    assert result == (-6.0, None), \
-        "For parameters 1, 12, 36 the result should be -6"
+    assert result == (-6.0, None), "For parameters 1, 12, 36 the result should be -6"
 
     result = solve_quadratic_equation(5, 3, 7)
     print("Result: ", result)
-    assert result == (None, None),\
-        "For parameters 5, 3, 7 the result should be 'Equation has no roots'"
+    assert result == (
+        None,
+        None,
+    ), "For parameters 5, 3, 7 the result should be 'Equation has no roots'"
 
 
 if __name__ == "__main__":

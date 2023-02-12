@@ -8,8 +8,9 @@ def calculate_fibonacci(index: int) -> int:
 
 def main() -> None:
     input_index = int(input("Enter desired value: "))
-    print(f"{input_index} element in fibonacci"
-          f" is {calculate_fibonacci(input_index)}")
+    print(
+        f"{input_index} element in fibonacci" f" is {calculate_fibonacci(input_index)}"
+    )
 
 
 if __name__ == "__main__":
