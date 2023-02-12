@@ -1,7 +1,7 @@
 def sign(number: float) -> int:
     if number == 0:
         return 0
-    if number < 1:
+    if number < 0:
         return -1
     return 1
 

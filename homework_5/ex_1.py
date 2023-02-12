@@ -10,8 +10,5 @@ def degrees2radians(degrees: float) -> float:
 
 
 print(
-    display_result(cos(60)),
-    display_result(cos(45)),
-    display_result(cos(40)),
-    sep="\n"
+    display_result(cos(60)), display_result(cos(45)), display_result(cos(40)), sep="\n"
 )

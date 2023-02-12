@@ -1,12 +1,9 @@
 from math import pi, sqrt
 
 
-def cone_square_and_volume(
-        radius: float,
-        height: float
-) -> tuple[float, float]:
-    local_square = pi * (radius ** 2) + pi * radius * (sqrt(radius ** 2 + height ** 2))
-    local_volume = 1/3 * pi * pow(radius, 2) * height
+def cone_square_and_volume(radius: float, height: float) -> tuple[float, float]:
+    local_square = pi * (radius**2) + pi * radius * (sqrt(radius**2 + height**2))
+    local_volume = 1 / 3 * pi * pow(radius, 2) * height
     return local_square, local_volume
 
 

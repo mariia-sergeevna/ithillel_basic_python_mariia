@@ -1,7 +1,5 @@
 def is_even(number: float) -> bool:
-    if number % 2:
-        return False
-    return True
+    return not number % 2
 
 
 def test():
