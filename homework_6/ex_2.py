@@ -26,21 +26,24 @@ def main() -> None:
 def test() -> None:
     result = solve_quadratic_equation(1, -2, -3)
     print("Result: ", result)
+    error_text = "For parameters 1, -2, -3 the result should be 3 and -1"
     assert result == (
         3.0,
         -1.0,
-    ), "For parameters 1, -2, -3 the result should be 3 and -1"
+    ), error_text
 
     result = solve_quadratic_equation(1, 12, 36)
     print("Result: ", result)
-    assert result == (-6.0, None), "For parameters 1, 12, 36 the result should be -6"
+    error_msg = "For parameters 1, 12, 36 the result should be -6"
+    assert result == (-6.0, None), error_msg
 
     result = solve_quadratic_equation(5, 3, 7)
     print("Result: ", result)
+    error_notice = "For parameters 5, 3, 7 the result should be 'Equation has no roots'"
     assert result == (
         None,
         None,
-    ), "For parameters 5, 3, 7 the result should be 'Equation has no roots'"
+    ), error_notice
 
 
 if __name__ == "__main__":
