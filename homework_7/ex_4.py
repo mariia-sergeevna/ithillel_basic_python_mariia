@@ -1,8 +1,8 @@
-def sum_symbol_codes(first: str, last: str) -> int:
-    sum_of_symbol_codes = 0
-    for code in range(ord(first), ord(last) + 1):
-        sum_of_symbol_codes += code
-    return sum_of_symbol_codes
+def sum_symbol_codes(first: str, last: str) -> float:
+    unicode_diff = ord(last) - ord(first)
+    triangle_num = unicode_diff * (unicode_diff + 1) / 2
+
+    return ord(first) * (unicode_diff + 1) + triangle_num
 
 
 def main() -> None:
@@ -13,7 +13,7 @@ def main() -> None:
 
 def test():
     result = sum_symbol_codes("a", "d")
-    assert result == 394, f"For symbols 'a' and 'b' result must be 394"
+    assert result == 394, f"For symbols 'a' and 'b' result must be 394.0"
 
 
 if __name__ == "__main__":

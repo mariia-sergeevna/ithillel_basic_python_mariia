@@ -1,15 +1,15 @@
-def calculate_fibonacci(index: int) -> int:
-    if index == 1:
+def calculate_fibonacci(n: int) -> int:
+    if n == 1:
         return 0
-    if index == 2:
+    if n == 2:
         return 1
-    previous_value, current_value = 0, 1
-    current_index = 2
-    while current_index <= index:
-        current_value += previous_value
-        previous_value = current_value - previous_value
-        current_index += 1
-    return previous_value
+    prev, cur = 0, 1
+    cur_idx = 2
+    while cur_idx <= n:
+        cur += prev
+        prev = cur - prev
+        cur_idx += 1
+    return prev
 
 
 def main() -> None:

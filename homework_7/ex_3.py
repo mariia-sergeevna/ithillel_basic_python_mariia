@@ -1,11 +1,12 @@
+from math import log2
+
+
 def calculate_wheat_chess_position(kilograms: float) -> str:
     grams = (kilograms * pow(10, 6)) / 35
-    power_2 = -1
-    for i in "abcdefgh":
-        for j in range(1, 9):
-            power_2 += 1
-            if 2**power_2 == grams:
-                return f"{i}{j}"
+    cage = int(log2(grams) + 1)
+    letters = "abcdefgh"
+
+    return letters[cage // 8] + str(cage % 8)
 
 
 def main() -> None:
