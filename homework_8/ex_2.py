@@ -14,7 +14,7 @@ def copydeep(
         return [copydeep(x) for x in obj]
 
 
-def main():
+def main() -> None:
     lst1 = ["a", 1, 2.0, ["b"]]
     lst2 = copydeep(lst1)
     lst1[3].append(0)
