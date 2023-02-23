@@ -1,17 +1,14 @@
-from collections import Counter
-
-
 def group_by_surname(list_of_enrollees: list):
-    first_words = Counter([i.split()[1][0] for i in list_of_enrollees])
+    first_words = [i.split()[1][0].upper() for i in list_of_enrollees]
     groups = {
-        range(ord("A"), ord("I") + 1): 0,
-        range(ord("J"), ord("P") + 1): 0,
-        range(ord("Q"), ord("T") + 1): 0,
-        range(ord("U"), ord("Z") + 1): 0,
+        "ABCDEFGHI": 0,
+        "JQKLMNOP": 0,
+        "QRST": 0,
+        "UVWXYZ": 0,
     }
     for word in first_words:
         for key in groups.keys():
-            if ord(word) in key:
+            if word in key:
                 groups[key] += 1
     return groups.values()
 
