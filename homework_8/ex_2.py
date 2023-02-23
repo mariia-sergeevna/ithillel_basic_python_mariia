@@ -2,9 +2,9 @@ from typing import Union
 
 
 def copydeep(
-    obj: Union[int, float, str, tuple, list]
-) -> Union[int, float, str, tuple, list]:
-    if isinstance(obj, (int, float, str)):
+    obj: Union[str, int, float, bool, list, tuple]
+) -> Union[str, int, float, bool, list, tuple]:
+    if isinstance(obj, (str, int, float, bool)):
         return obj
 
     if isinstance(obj, tuple):

@@ -17,10 +17,10 @@ def main() -> None:
 
 
 def test() -> None:
-    result = index(['a', 1, 2.0, ['b']], 1)
+    result = index(["a", 1, 2.0, ["b"]], 1)
     assert result == 1, "With parameters (['a', 1, 2.0, ['b']], 1) result must be '1'"
 
-    result = index(['a', 1, 2.0, ['b']], 8)
+    result = index(["a", 1, 2.0, ["b"]], 8)
     assert result is None, "This element doesn't exist in list"
 
 
