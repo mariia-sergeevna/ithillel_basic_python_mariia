@@ -1,8 +1,8 @@
-def get_max_digit_with_str(number) -> int:
-    return sorted(number)[-1]
+def get_max_digit_with_str(number: int) -> int:
+    return max(str(number))
 
 
-def get_max_digit_without_str(number) -> int:
+def get_max_digit_without_str(number: int) -> int:
     num = 0
     while number >= 1:
         if number % 10 > num:
@@ -12,11 +12,11 @@ def get_max_digit_without_str(number) -> int:
 
 
 def main() -> None:
-    user_input = input("Enter number for find biggest digit: ")
+    user_input = int(input("Enter number for find biggest digit: "))
     res_1 = get_max_digit_with_str(user_input)
     print(f"Find with using str: {res_1}")
 
-    res_2 = get_max_digit_without_str(int(user_input))
+    res_2 = get_max_digit_without_str(user_input)
     print(f"Find without using str: {res_2}")
 
 

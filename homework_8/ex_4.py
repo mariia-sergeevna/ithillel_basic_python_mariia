@@ -1,6 +1,6 @@
 def gen_primes() -> list:
     prime_numbers = []
-    for num in range(2, 101):
+    for num in range(3, 101, 2):
         for item in prime_numbers:
             if not num % item:
                 break

@@ -1,5 +1,5 @@
 def sort_by_value(lst: list) -> list:
-    return sorted(lst, key=lambda num: float(num))
+    return sorted(lst, key=float)
 
 
 def sort_by_1digit_of_num(lst: list) -> list:

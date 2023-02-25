@@ -6,7 +6,6 @@ def index(lst: list, elem: Any) -> Union[int, None]:
     for idx, item in enumerate(lst):
         if item == elem:
             return idx
-    return None
 
 
 def main() -> None:
