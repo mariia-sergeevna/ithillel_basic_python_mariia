@@ -1,5 +1,5 @@
 def get_max_digit_with_str(number: int) -> int:
-    return max(str(number))
+    return int(max(str(number)))
 
 
 def get_max_digit_without_str(number: int) -> int:
