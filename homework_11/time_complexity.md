@@ -1,9 +1,12 @@
-1. Time Complexity of operation 'append()' for list
+1. Time complexity of list 'append()' operation.  
+   Answer: It depends on size of list. Average case - O(1), worst case - O(N) and amortized worst case - O(1)
+2. Time complexity of list 'in' operation.
+<br/>
     Answer: 
-2. Time Complexity of operation 'in' for list
-    Answer: 
-3. Time Complexity of operation 'pop()' for list. a) in general b) with parameter '-1'
-    Answer: 
+<3. Time complexity of list 'pop' operation:
+   1) general case
+   2) case with parameter '-1'
+   Answer: >
 4. Time Complexity of add element to dict
     Answer: 
 5. Time Complexity of operation 'in' for dict
