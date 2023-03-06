@@ -27,7 +27,7 @@
                work_list[j-1] = work_list[j] # O(1)
                work_list[j] = buffer # O(1)
     ```
-    **Answer:** # O(N^2)
+    **Answer:** O(N^2)
 8. Time complexity for the code described below, assume that list 'some_list' consists of N elements
     ```python
    result = {} # O(1)
