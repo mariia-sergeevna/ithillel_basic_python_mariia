@@ -3,7 +3,7 @@ from random import randint
 
 def user_pick():
     """Guess the number picked by user."""
-    possible_nums = [i for i in range(1, 11)]
+    possible_nums = [i for i in range(1, 101)]
     lowest_idx = 0
     highest_idx = len(possible_nums) - 1
     answers = {
@@ -15,10 +15,14 @@ def user_pick():
     while lowest_idx <= highest_idx:
         middle_el = (lowest_idx + highest_idx) // 2
         guess_num = possible_nums[middle_el]
+
+        if abs(lowest_idx - highest_idx) == 1 or lowest_idx == highest_idx:
+            return guess_num
+
         print(f"Is your number {guess_num}?")
         result = get_str(answers)
         if result == "3":
-            return middle_el
+            return guess_num
         if result == "2":
             highest_idx = middle_el - 1
         else:
@@ -28,7 +32,7 @@ def user_pick():
 
 def program_pick():
     """Guess the number picked by computer."""
-    number = randint(1, 10)
+    number = randint(1, 100)
 
     while True:
         number_input = get_integer()
@@ -41,15 +45,22 @@ def program_pick():
             break
 
 
-def get_integer():
+def get_integer(lower_bound=1, upper_bound=100):
     """Get user input to guess the number."""
     while True:
-        user_input = input("Your number: ")
+        user_input = input("Enter a number from 1 to 100: ")
         try:
             input_num = int(user_input)
-            return input_num
+
+            if input_num < lower_bound:
+                print(f"Your number should be greater than or equal to {lower_bound}")
+            elif input_num > upper_bound:
+                print(f"Your number should be smaller than or equal to {upper_bound}")
+            else:
+                return input_num
+
         except ValueError:
-            print("Invalid input! Please enter a numeric value")
+            print(f"Invalid input! {user_input} is not a integer value!")
 
 
 def get_str(option: dict):
@@ -60,12 +71,13 @@ def get_str(option: dict):
 
         user_input = input("Choose one of the options: ")
 
-        if user_input not in option:
-            print(
-                f"Invalid input! Only {' and '.join(map(str, list(option.keys())))} options are available"
-            )
         if user_input in option:
             return user_input
+
+        if user_input not in option:
+            print(
+                f"Invalid input! Only {' and '.join(map(str, option))} options are available"
+            )
 
 
 def main():
@@ -77,8 +89,8 @@ def main():
         command = get_str(main_menu)
         match command:
             case "1":
-                user_pick()
-
+                guessed_num = user_pick()
+                print(f"I guessed it! Your number is {guessed_num}")
             case "2":
                 program_pick()
 

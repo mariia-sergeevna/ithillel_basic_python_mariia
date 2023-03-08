@@ -6,28 +6,30 @@ def pemrtuate(text: str) -> str:
     Get a keyboard text input and permute each word in this text.
     """
     words = text.split()
-    result = ""
+    result = []
 
     for word in words:
+        shuffle_word = []
         if len(word) <= 3:
-            result += word + " "
+            result.append(word)
             continue
 
-        result += word[0]
-        for idx in range(1, len(word) - 1, 3):
-            if len(word) - 1 - idx == 1:
-                result += word[idx]
+        shuffle_word.append(word[0])
+        last_idx = len(word) - 1
+        for idx in range(1, last_idx, 3):
+            if last_idx - idx == 1:
+                shuffle_word.append(word[idx])
                 break
 
-            if len(word) - 1 - idx == 2:
+            if last_idx - idx == 2:
                 if word[idx] == word[idx + 1]:
-                    result += word[idx : idx + 2]
+                    shuffle_word.append(word[idx : idx + 2])
                     break
-                result += word[idx + 1] + word[idx]
+                shuffle_word.append(word[idx + 1] + word[idx])
                 continue
 
             if word[idx] == word[idx + 1] and word[idx] == word[idx + 2]:
-                result += word[idx : idx + 3]
+                shuffle_word.append(word[idx : idx + 3])
                 continue
 
             shuffle_chars = list(word[idx : idx + 3])
@@ -35,10 +37,12 @@ def pemrtuate(text: str) -> str:
             while shuffle_chars == list(word[idx : idx + 3]):
                 shuffle(shuffle_chars)
 
-            result += "".join(shuffle_chars)
-        result += word[-1] + " "
+            shuffle_word.extend(shuffle_chars)
 
-    return result
+        shuffle_word.append(word[-1])
+        result.append("".join(shuffle_word))
+
+    return " ".join(result)
 
 
 def main() -> None:

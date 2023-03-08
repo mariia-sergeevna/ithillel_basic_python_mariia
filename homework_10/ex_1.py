@@ -34,7 +34,7 @@ def test_deep_copy():
     test_data[3]["d"] = test_data
     copy = copydeep(test_data)
 
-    assert (copy[3]["d"] is not test_data[3]["d"]), "Result must be true"
+    assert copy[3]["d"] is not test_data[3]["d"], "Result must be true"
 
 
 if __name__ == "__main__":
