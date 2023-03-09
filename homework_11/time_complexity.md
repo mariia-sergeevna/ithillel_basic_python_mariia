@@ -32,7 +32,7 @@
     ```python
    result = {} # O(1)
    for elem in some_list: # O(N)
-       if elem not in result: # O(N) or O(1) if some_list unique
+       if elem not in result: # O(1)
            result[elem] = True  # O(1)
     ```
-    **Answer:**  O(N^2), if some_list consist only unique elements, then O(N) 
+    **Answer:**  O(N)
