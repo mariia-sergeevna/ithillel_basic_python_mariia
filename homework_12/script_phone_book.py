@@ -1,12 +1,6 @@
 import json
 
 running = True
-# global phone_book
-
-# phone_book = [
-#     {"name": "Nazar", "surname": "Nazarenko", "age": 50, "phone_number": "+18005550102"},
-#     {"name": "Mariia", "surname": "Mariychuk", "age": 15, "phone_number": "+18505550112"},
-# ]
 
 
 def display_record(number, entry):
@@ -15,13 +9,32 @@ def display_record(number, entry):
     print("| Name:    %20s |" % entry["name"])
     print("| Age:     %20s |" % entry["age"])
     print("| Phone:   %20s |" % entry["phone_number"])
+    print("| Email:   %20s |" % entry["email"])
 
 
-def display_phonebook():
+def display_phonebook(phone_book):
     print("#########  Phone book  ##########")
 
     for number, record in enumerate(phone_book):
         display_record(number + 1, record)
+
+
+def get_input_int(lower_bound=18, upper_bound=99):
+    """Get and check user input age."""
+    while True:
+        user_input = input("Enter age: ")
+        try:
+            input_age = int(user_input)
+
+            if input_age < lower_bound:
+                print(f"Your number should be greater than or equal to {lower_bound}")
+            elif input_age > upper_bound:
+                print(f"Your number should be smaller than or equal to {upper_bound}")
+            else:
+                return input_age
+
+        except ValueError:
+            print(f"Invalid input! '{user_input}' is not a integer value!")
 
 
 def get_input_str(option):
@@ -32,58 +45,60 @@ def get_input_str(option):
         if user_input in option:
             return user_input
 
-        if not user_input:
+        elif not user_input:
             print("Invalid input! Input can't be empty")
 
-        elif user_input not in option:
+        else:
             print(
                 f"Invalid input! Only {', '.join(map(str, option))} options are available"
             )
 
 
-def find_by_field(field, field_value):
+def find_by_field(phone_book, field, field_value):
+    found = False
     for idx, el in enumerate(phone_book):
         if el[field] == field_value:
             display_record(idx, el)
-            break
-    else:
+            found = True
+    if not found:
         display_error(f"Records with {field} '{field_value}' not found")
 
 
-def find_record_by_name():
+def find_record_by_name(phone_book):
     user_input = input("Enter name: ")
-    find_by_field("name", user_input)
+    find_by_field(phone_book, "name", user_input)
 
 
-def find_record_by_age():
+def find_record_by_age(phone_book):
     user_input = input("Enter age: ")
-    find_by_field("age", user_input)
+    find_by_field(phone_book, "age", user_input)
 
 
-def delete_by_field(field, field_value):
+def delete_by_field(phone_book, field, field_value):
     copy_phonebook = phone_book[:]
     for idx, el in enumerate(copy_phonebook):
         if el[field] == field_value:
             del phone_book[idx]
 
 
-def delete_record_by_name():
+def delete_record_by_name(phone_book):
     input_name = input("Enter name: ")
-    delete_by_field("name", input_name)
+    delete_by_field(phone_book, "name", input_name)
 
 
-def delete_record_by_surname():
+def delete_record_by_surname(phone_book):
     input_surname = input("Enter surname: ")
-    delete_by_field("surname", input_surname)
+    delete_by_field(phone_book, "surname", input_surname)
 
 
-def add_record_to_phonebook():
+def add_record_to_phonebook(phone_book):
     surname = input("Enter surname: ")
     name = input("Enter name: ")
-    age = int(input("Enter age: "))
+    # age = int(input("Enter age: "))
     phone_number = input("Enter phone num.: ")
+    email = input("Enter email: ")
 
-    entry = {"surname": surname, "name": name, "age": age, "phone_number": phone_number}
+    entry = {"surname": surname, "name": name, "age": get_input_int(), "phone_number": phone_number, "email": email}
     phone_book.append(entry)
 
 
@@ -95,36 +110,43 @@ def display_info(message):
     print("INFO: %s" % message)
 
 
-def count_all_entries_in_phonebook():
+def count_all_entries_in_phonebook(phone_book):
     print("Total number of entries: ", len(phone_book))
 
 
-def display_phonebook_sorted_by_age():
+def display_phonebook_sorted_by_age(phone_book):
     sorted_by_age = sorted(phone_book, key=lambda field: field["age"])
     for number, entry in enumerate(sorted_by_age):
         display_record(number + 1, entry)
 
 
-def increase_age():
-    # global phone_book
+def increase_age(phone_book):
     number = int(input("Enter number for increase: "))
     for record in phone_book:
         record.update((k, v + number) for k, v in record.items() if k == "age")
 
 
-def avr_age_of_all_persons():
+def avr_age_of_all_persons(phone_book):
     print(sum(user["age"] for user in phone_book) / len(phone_book))
 
 
-def save_to_file():
+def save_to_file(phone_book):
     with open("phone_book.json", "w", encoding="utf8") as f:
         json.dump(phone_book, f, indent=4)
 
 
 def load_from_file():
-    with open("phone_book.json", 'r') as f:
+    with open("phone_book.json", "r") as f:
         phone_book = json.load(f)
         return phone_book
+
+
+def save_data(phone_book):
+    choice = {"Y": True, "N": False}
+    print("Do you want to save changes? Press 'Y' for saving and 'N' for break")
+    user_choice = get_input_str(choice)
+    if user_choice:
+        save_to_file(phone_book)
 
 
 def exit():
@@ -133,7 +155,7 @@ def exit():
 
 
 def print_prompt():
-    print("~ Welcome to phonebook ~")
+    print("\n~ Welcome to phonebook ~")
     print("Select one of actions below:")
     print("\t1 - Print phonebook entries")
     print("\t2 - Print phonebook entries (by age)")
@@ -151,8 +173,11 @@ def print_prompt():
 
 
 def main():
+    phone_book = None
     while running:
         try:
+            if phone_book is None:
+                phone_book = load_from_file()
             menu = {
                 '1': display_phonebook,
                 '2': display_phonebook_sorted_by_age,
@@ -171,29 +196,14 @@ def main():
 
             print_prompt()
             user_input = get_input_str(menu)
-            menu[user_input]()
+            if user_input in ["0", "l"]:
+                save_data(phone_book)
+                menu[user_input]()
+            else:
+                menu[user_input](phone_book)
 
         except Exception as ex:
             display_error("Something went wrong. Try again...")
-        # menu = {
-        #     '1': display_phonebook,
-        #     '2': display_phonebook_sorted_by_age,
-        #     '3': add_record_to_phonebook,
-        #     '4': find_record_by_name,
-        #     '5': find_record_by_age,
-        #     '6': delete_record_by_name,
-        #     '7': count_all_entries_in_phonebook,
-        #     '8': avr_age_of_all_persons,
-        #     '9': increase_age,
-        #
-        #     '0': exit,
-        #     's': save_to_file,
-        #     'l': load_from_file,
-        # }
-        #
-        # print_prompt()
-        # user_input = input("Choose one option: ")
-        # menu[user_input]()
 
 
 if __name__ == '__main__':
