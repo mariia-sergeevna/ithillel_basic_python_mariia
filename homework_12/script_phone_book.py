@@ -19,7 +19,7 @@ def display_phonebook(phone_book):
         display_record(number + 1, record)
 
 
-def get_input_int(lower_bound=18, upper_bound=99):
+def get_input_int(lower_bound=18, upper_bound=105):
     """Get and check user input age."""
     while True:
         user_input = input("Enter age: ")
@@ -27,9 +27,9 @@ def get_input_int(lower_bound=18, upper_bound=99):
             input_age = int(user_input)
 
             if input_age < lower_bound:
-                print(f"Your number should be greater than or equal to {lower_bound}")
+                print(f"Entered age should be greater than or equal to {lower_bound}")
             elif input_age > upper_bound:
-                print(f"Your number should be smaller than or equal to {upper_bound}")
+                print(f"Entered age should be smaller than or equal to {upper_bound}")
             else:
                 return input_age
 
@@ -121,7 +121,7 @@ def display_phonebook_sorted_by_age(phone_book):
 
 
 def increase_age(phone_book):
-    number = int(input("Enter number for increase: "))
+    number = int(input("Enter number to increase age: "))
     for record in phone_book:
         record.update((k, v + number) for k, v in record.items() if k == "age")
 
@@ -130,8 +130,8 @@ def avr_age_of_all_persons(phone_book):
     print(sum(user["age"] for user in phone_book) / len(phone_book))
 
 
-def save_to_file(phone_book):
-    with open("phone_book.json", "w", encoding="utf8") as f:
+def save_to_file(file, phone_book):
+    with open(file, "w", encoding="utf8") as f:
         json.dump(phone_book, f, indent=4)
 
 
@@ -141,12 +141,12 @@ def load_from_file():
         return phone_book
 
 
-def save_data(phone_book):
+def save_data(file, phone_book):
     choice = {"Y": True, "N": False}
     print("Do you want to save changes? Press 'Y' for saving and 'N' for break")
     user_choice = get_input_str(choice)
-    if user_choice:
-        save_to_file(phone_book)
+    if user_choice == "Y":
+        save_to_file(file, phone_book)
 
 
 def exit():
@@ -173,11 +173,10 @@ def print_prompt():
 
 
 def main():
-    phone_book = None
+    phone_book = []
+    file = "user_phone_book.json"
     while running:
         try:
-            if phone_book is None:
-                phone_book = load_from_file()
             menu = {
                 '1': display_phonebook,
                 '2': display_phonebook_sorted_by_age,
@@ -196,9 +195,14 @@ def main():
 
             print_prompt()
             user_input = get_input_str(menu)
-            if user_input in ["0", "l"]:
-                save_data(phone_book)
-                menu[user_input]()
+
+            if user_input in ["0", "s", "l"]:
+                save_data(file, phone_book)
+                if user_input in ["0"]:
+                    menu[user_input]()
+                if user_input in ["l"]:
+                    phone_book = load_from_file()
+                    file = "phone_book.json"
             else:
                 menu[user_input](phone_book)
 
