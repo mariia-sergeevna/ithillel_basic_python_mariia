@@ -1,23 +1,24 @@
+"""Phone book
+
+This script allows the user to apply CRUD operations to the phone contacts.
+
+Script also allows to search records by fields, count records in phone book,
+count average age, load from file and save from file.
+
+
+To run the program use parameters:
+    filename - Path to File
+    verbose (True/False) - allows to ON/OFF decorator for detailed processing info
+"""
+
 import json
 import os
 import argparse
 
 from utilities.input import get_input_str, get_input_int, get_input_choice_menu
-from utilities.wrapper import display_status
+from utilities.wrapper import verbose_mode
 
 verbose = False
-
-
-# def display_status(func):
-#     def wrapper(*args, **kwargs):
-#         if verbose:
-#             print("Starting handle your request...")
-#         result = func(*args, **kwargs)
-#         if verbose:
-#             print("Request handled is finished.")
-#         return result
-#
-#     return wrapper
 
 
 def display_record(number, record):
@@ -29,64 +30,17 @@ def display_record(number, record):
     print("| Email:   %20s |" % record["email"])
 
 
-@display_status
+@verbose_mode(verbose)
 def display_phonebook(phone_book):
+    """Print all records from phone book"""
     print("#########  Phone book  ##########")
 
     for number, record in enumerate(phone_book):
         display_record(number + 1, record)
 
 
-# def get_input_int(prompt, lower_bound=1, upper_bound=99):
-#     """Get and check user input age."""
-#     while True:
-#         user_input = input(prompt)
-#         try:
-#             input_age = int(user_input)
-#
-#             if input_age < lower_bound:
-#                 print(f"Entered age should be greater than or equal to {lower_bound}")
-#             elif input_age > upper_bound:
-#                 print(f"Entered age should be smaller than or equal to {upper_bound}")
-#             else:
-#                 return input_age
-#
-#         except ValueError:
-#             print(f"Invalid input! '{user_input}' is not an integer value!")
-#
-#
-# def get_input_choice_menu(option):
-#     """Get and check user input"""
-#     while True:
-#         user_input = input("Choose one of the options: ")
-#
-#         if user_input.lower() in option:
-#             return user_input
-#
-#         elif not user_input:
-#             print("Invalid input! Input can't be empty")
-#
-#         else:
-#             print(
-#                 f"Invalid input! Only {', '.join(map(str, option))} options are available"
-#             )
-#
-#
-# def get_input_str(prompt, field):
-#     if field == "surname" or field == "name":
-#         regex = r'[A-Za-z]+'
-#     elif field == "phone_number":
-#         regex = r'\+1\d{10}$'
-#     else:
-#         regex = r'[\w.-]+@[A-Za-z]+\.[a-z]{2,}'
-#     while True:
-#         user_input = input(prompt)
-#         if re.fullmatch(regex, user_input):
-#             return user_input
-#         print(f"Invalid input! Please, enter correct {field}.")
-
-
 def find_by_field(phone_book, field, field_value):
+    """Allows to search by field name and value"""
     found = False
     for idx, el in enumerate(phone_book):
         if el[field] == field_value:
@@ -96,25 +50,26 @@ def find_by_field(phone_book, field, field_value):
         display_error(f"Records with {field} '{field_value}' not found")
 
 
-@display_status
+@verbose_mode(verbose)
 def find_record_by_name(phone_book):
     user_input = get_input_str("Enter name: ", "name")
     find_by_field(phone_book, "name", user_input)
 
 
-@display_status
+@verbose_mode(verbose)
 def find_record_by_age(phone_book):
     user_input = get_input_int("Enter desired age: ")
     find_by_field(phone_book, "age", user_input)
 
 
-@display_status
+@verbose_mode(verbose)
 def find_record_by_email(phone_book):
     user_input = get_input_str("Enter email: ", "email")
     find_by_field(phone_book, "email", user_input)
 
 
 def delete_by_field(phone_book, field, field_value):
+    """Allows to delete record by field name and value"""
     copy_phonebook = phone_book[:]
     found = False
     for idx, el in enumerate(copy_phonebook):
@@ -125,20 +80,21 @@ def delete_by_field(phone_book, field, field_value):
         print(f"Records with {field} '{field_value}' not found")
 
 
-@display_status
+@verbose_mode(verbose)
 def delete_record_by_name(phone_book):
     input_name = get_input_str("Enter name: ", "name")
     delete_by_field(phone_book, "name", input_name)
 
 
-@display_status
+@verbose_mode(verbose)
 def delete_record_by_surname(phone_book):
     input_surname = get_input_str("Enter surname: ", "surname")
     delete_by_field(phone_book, "surname", input_surname)
 
 
-@display_status
+@verbose_mode(verbose)
 def add_record_to_phonebook(phone_book):
+    """Add 1 record to phone book"""
     record = {
         "surname": get_input_str("Enter surname: ", "surname"),
         "name": get_input_str("Enter name: ", "name"),
@@ -153,57 +109,62 @@ def display_error(message):
     print("ERROR: %s" % message)
 
 
-@display_status
+@verbose_mode(verbose)
 def count_all_entries_in_phonebook(phone_book):
     print("Total number of entries: ", len(phone_book))
 
 
-@display_status
+@verbose_mode(verbose)
 def display_phonebook_sorted_by_age(phone_book):
     sorted_by_age = sorted(phone_book, key=lambda field: field["age"])
     for number, entry in enumerate(sorted_by_age):
         display_record(number + 1, entry)
 
 
-@display_status
+@verbose_mode(verbose)
 def increase_age(phone_book):
+    """Allows to increase age by entered value for each record in phone book"""
     number = get_input_int("Enter a number to increase the age: ")
     for record in phone_book:
         record.update((k, v + number) for k, v in record.items() if k == "age")
 
 
-@display_status
+@verbose_mode(verbose)
 def avr_age_of_all_persons(phone_book):
     print(round(sum(user["age"] for user in phone_book) / len(phone_book)))
 
 
-@display_status
+@verbose_mode(verbose)
 def save_to_file(file_name, phone_book):
+    """Save current phonebook to file passed in parameter"""
     with open(file_name, "w", encoding="utf8") as f:
         json.dump(phone_book, f, indent=4)
 
 
-@display_status
+@verbose_mode(verbose)
 def load_from_file(file_name):
+    """Load phonebook from file passed in parameter"""
     with open(file_name, "r") as f:
         phone_book = json.load(f)
         return phone_book
 
 
 def prompt_to_save(file_name, phone_book):
+    """Display prompt to save current phone book and save it"""
     choice = {"y": True, "n": False}
     print("Do you want to save changes? Press 'y' for saving and 'n' for break")
     user_choice = get_input_choice_menu(choice)
-    if user_choice == "Y":
+    if user_choice == "y":
         save_to_file(file_name, phone_book)
 
 
-@display_status
+@verbose_mode(verbose)
 def finish_program():
     exit()
 
 
 def print_prompt():
+    """Display available options"""
     options = [
         "~ Welcome to phonebook ~",
         "Select one of actions below:",
@@ -220,9 +181,9 @@ def print_prompt():
         "-----------------------------",
         "\ts - Save to file",
         "\tl - Load from file",
-        "\t0 - Exit"
+        "\t0 - Exit",
     ]
-    print('\n'.join(options))
+    print("\n".join(options))
 
 
 def main():
@@ -255,7 +216,6 @@ def main():
                 "8": count_all_entries_in_phonebook,
                 "9": avr_age_of_all_persons,
                 "10": increase_age,
-
                 "0": finish_program,
                 "s": save_to_file,
                 "l": load_from_file,

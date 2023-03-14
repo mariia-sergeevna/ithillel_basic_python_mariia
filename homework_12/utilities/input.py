@@ -2,7 +2,7 @@ import re
 
 
 def get_input_int(prompt, lower_bound=1, upper_bound=99):
-    """Get and check user input age."""
+    """Get and check that user input age is valid."""
     while True:
         user_input = input(prompt)
         try:
@@ -20,7 +20,7 @@ def get_input_int(prompt, lower_bound=1, upper_bound=99):
 
 
 def get_input_choice_menu(option):
-    """Get and check user input"""
+    """Get and check that user menu choice is valid."""
     while True:
         user_input = input("Choose one of the options: ")
 
@@ -37,12 +37,15 @@ def get_input_choice_menu(option):
 
 
 def get_input_str(prompt, field):
+    """
+    Get and check that user input is valid for fields: surname, name, phone number, email.
+    """
     if field == "surname" or field == "name":
-        regex = r'[A-Za-z]+'
+        regex = r"[A-Za-z]+"
     elif field == "phone_number":
-        regex = r'\+1\d{10}$'
+        regex = r"\+1\d{10}$"
     else:
-        regex = r'[\w.-]+@[A-Za-z]+\.[a-z]{2,}'
+        regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
     while True:
         user_input = input(prompt)
         if re.fullmatch(regex, user_input):
