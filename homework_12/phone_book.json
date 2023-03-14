@@ -24,14 +24,7 @@
         "surname": "Jonson",
         "name": "Jack",
         "age": 54,
-        "phone_number": "23-78",
+        "phone_number": "+18505550104",
         "email": "j_test@gmail.com"
-    },
-    {
-        "surname": "gsg",
-        "name": "sdgds",
-        "age": 23,
-        "phone_number": "322424",
-        "email": "mail"
     }
 ]
