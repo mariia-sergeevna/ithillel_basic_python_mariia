@@ -49,12 +49,15 @@ class ElectricTransport(Transport, BrakesMixin):
 
     def __init__(
         self,
-        brand: str,
-        weight: Union[int, float],
-        max_speed: Union[int, float],
+        *args,
         engine: str,
+        # brand: str,
+        # weight: Union[int, float],
+        # max_speed: Union[int, float],
+        **kwargs
     ):
-        super().__init__(brand, weight, max_speed)
+        # super().__init__(brand, weight, max_speed)
+        super().__init__(*args, **kwargs)
         self.engine = engine
 
     def start_to_move(self):
@@ -74,12 +77,15 @@ class AirTransport(Transport):
 
     def __init__(
         self,
-        brand: str,
-        weight: Union[int, float],
-        max_speed: Union[int, float],
+        *args,
         flight_altitude: Union[int, float],
+        # brand: str,
+        # weight: Union[int, float],
+        # max_speed: Union[int, float],
+        **kwargs,
     ):
-        super().__init__(brand, weight, max_speed)
+        # super().__init__(brand, weight, max_speed)
+        super().__init__(*args, **kwargs)
         self.flight_altitude = flight_altitude
 
     def start_to_move(self):
@@ -100,13 +106,17 @@ class Train(ElectricTransport):
 
     def __init__(
         self,
-        brand: str,
-        weight: Union[int, float],
-        max_speed: Union[int, float],
-        engine: str,
+        *args,
         count_wagons: int,
+        **kwargs,
+        # brand: str,
+        # weight: Union[int, float],
+        # max_speed: Union[int, float],
+        # engine: str,
+        # count_wagons: int,
     ):
-        super().__init__(brand, weight, max_speed, engine)
+        # super().__init__(brand, weight, max_speed, engine)
+        super().__init__(*args, **kwargs)
         self.count_wagons = count_wagons
 
     @staticmethod
@@ -132,13 +142,17 @@ class AirBalloon(AirTransport):
 
     def __init__(
         self,
-        brand: str,
-        weight: Union[int, float],
-        max_speed: Union[int, float],
-        flight_altitude: Union[int, float],
+        *args,
         temperature_inside: Union[int, float],
+        **kwargs,
+        # brand: str,
+        # weight: Union[int, float],
+        # max_speed: Union[int, float],
+        # flight_altitude: Union[int, float],
+        # temperature_inside: Union[int, float],
     ):
-        super().__init__(brand, weight, max_speed, flight_altitude)
+        # super().__init__(brand, weight, max_speed, flight_altitude)
+        super().__init__(*args, **kwargs)
         self.temperature_inside = temperature_inside
 
     @staticmethod
@@ -161,16 +175,18 @@ class Plane(ElectricTransport, AirTransport):
 
     def __init__(
         self,
-        brand: str,
-        weight: Union[int, float],
-        max_speed: Union[int, float],
-        engine: str,
-        flight_altitude: Union[int, float],
+        *args,
         length_wing: Union[int, float],
+        # brand: str,
+        # weight: Union[int, float],
+        # max_speed: Union[int, float],
+        # engine: str,
+        # flight_altitude: Union[int, float],
+        **kwargs,
     ):
-        # super().__init__(brand, weight, max_speed, engine, flight_altitude)
-        super().__init__(brand, weight, max_speed, engine)
-        AirTransport.__init__(brand, weight, max_speed, flight_altitude=flight_altitude)
+        super().__init__(*args, **kwargs)
+        # super().__init__(brand, weight, max_speed, engine)
+        # AirTransport.__init__(brand, weight, max_speed, flight_altitude=flight_altitude)
         self.length_wing = length_wing
 
     def start_to_move(self):
