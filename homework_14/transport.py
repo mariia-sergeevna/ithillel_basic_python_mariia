@@ -181,6 +181,10 @@ class Plane(ElectricTransport, AirTransport):
     def start_to_move(self):
         return f"{self.brand} start the engine and takes off!"
 
+    @staticmethod
+    def sound():
+        return "Sound when moving 'Gggggggg'"
+
     def clean_turbine(self):
         """A method that cleans the turbine of the plane."""
         return f"Turbine of {self.brand} is clean"
