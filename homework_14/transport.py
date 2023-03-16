@@ -168,12 +168,9 @@ class Plane(ElectricTransport, AirTransport):
         flight_altitude: Union[int, float],
         length_wing: Union[int, float],
     ):
-        super().__init__(brand, weight, max_speed, engine, flight_altitude)
-        self.brand = brand
-        self.weight = weight
-        self.max_speed = max_speed
-        self.engine = engine
-        self.flight_altitude = flight_altitude
+        # super().__init__(brand, weight, max_speed, engine, flight_altitude)
+        super().__init__(brand, weight, max_speed, engine)
+        AirTransport.__init__(brand, weight, max_speed, flight_altitude=flight_altitude)
         self.length_wing = length_wing
 
     def start_to_move(self):
