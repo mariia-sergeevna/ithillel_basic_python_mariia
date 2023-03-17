@@ -41,22 +41,13 @@ class ElectricTransport(Transport, BrakesMixin):
     A class representing electric transport that inherits from Transport and BrakesMixin.
 
     Attributes:
-    - brand : the brand of the electric transport.
-    - weight : the weight of the electric transport in kilograms.
-    - max_speed : the maximum speed of the electric transport in kilometers per hour.
-    - engine : the type of engine of the electric transport.
+    - brand: str : the brand of the electric transport.
+    - weight: Union[int, float] : the weight of the electric transport in kilograms.
+    - max_speed: Union[int, float] : the maximum speed of the electric transport in kilometers per hour.
+    - engine: str : the type of engine of the electric transport.
     """
 
-    def __init__(
-        self,
-        *args,
-        engine: str,
-        # brand: str,
-        # weight: Union[int, float],
-        # max_speed: Union[int, float],
-        **kwargs
-    ):
-        # super().__init__(brand, weight, max_speed)
+    def __init__(self, *args, engine: str, **kwargs):
         super().__init__(*args, **kwargs)
         self.engine = engine
 
@@ -69,22 +60,18 @@ class AirTransport(Transport):
     A class representing air transport that inherits from Transport.
 
     Attributes:
-    - brand : the brand of the electric transport.
-    - weight : the weight of the electric transport in kilograms.
-    - max_speed : the maximum speed of the electric transport in kilometers per hour.
-    - flight_altitude : the maximum altitude the air transport can reach in meters.
+    - brand: str : the brand of the electric transport.
+    - weight: Union[int, float] : the weight of the electric transport in kilograms.
+    - max_speed: Union[int, float] : the maximum speed of the electric transport in kilometers per hour.
+    - flight_altitude: Union[int, float] : the maximum altitude the air transport can reach in meters.
     """
 
     def __init__(
         self,
         *args,
         flight_altitude: Union[int, float],
-        # brand: str,
-        # weight: Union[int, float],
-        # max_speed: Union[int, float],
         **kwargs,
     ):
-        # super().__init__(brand, weight, max_speed)
         super().__init__(*args, **kwargs)
         self.flight_altitude = flight_altitude
 
@@ -97,11 +84,11 @@ class Train(ElectricTransport):
     A class representing a train that inherits from ElectricTransport.
 
     Attributes:
-    - brand : the brand name of the train.
-    - weight : the weight of the train in kilograms.
-    - max_speed : the maximum speed of the train in km/h.
-    - engine : the type of engine the train uses.
-    - count_wagons : the number of wagons that the train has.
+    - brand: str : the brand name of the train.
+    - weight: Union[int, float] : the weight of the train in kilograms.
+    - max_speed: Union[int, float] : the maximum speed of the train in km/h.
+    - engine: str : the type of engine the train uses.
+    - count_wagons: int : the number of wagons that the train has.
     """
 
     def __init__(
@@ -109,13 +96,7 @@ class Train(ElectricTransport):
         *args,
         count_wagons: int,
         **kwargs,
-        # brand: str,
-        # weight: Union[int, float],
-        # max_speed: Union[int, float],
-        # engine: str,
-        # count_wagons: int,
     ):
-        # super().__init__(brand, weight, max_speed, engine)
         super().__init__(*args, **kwargs)
         self.count_wagons = count_wagons
 
@@ -133,11 +114,11 @@ class AirBalloon(AirTransport):
     A class representing air balloon that inherits from AirTransport.
 
     Attributes:
-    - brand : the brand name of the air balloon.
-    - weight : the weight of the air balloon in kilograms.
-    - max_speed : the maximum speed of the air balloon in km/h.
-    - flight_altitude : the maximum altitude the air balloon can reach in meters.
-    - temperature_inside : the temperature inside the air balloon in Celsius.
+    - brand: str : the brand name of the air balloon.
+    - weight: Union[int, float] : the weight of the air balloon in kilograms.
+    - max_speed: Union[int, float] : the maximum speed of the air balloon in km/h.
+    - flight_altitude: Union[int, float] : the maximum altitude the air balloon can reach in meters.
+    - temperature_inside: Union[int, float] : the temperature inside the air balloon in Celsius.
     """
 
     def __init__(
@@ -145,13 +126,7 @@ class AirBalloon(AirTransport):
         *args,
         temperature_inside: Union[int, float],
         **kwargs,
-        # brand: str,
-        # weight: Union[int, float],
-        # max_speed: Union[int, float],
-        # flight_altitude: Union[int, float],
-        # temperature_inside: Union[int, float],
     ):
-        # super().__init__(brand, weight, max_speed, flight_altitude)
         super().__init__(*args, **kwargs)
         self.temperature_inside = temperature_inside
 
@@ -165,28 +140,21 @@ class Plane(ElectricTransport, AirTransport):
     A class representing a plane that inherits from ElectricTransport and AirTransport.
 
     Attributes:
-    - brand : the brand of the plane.
-    - weight : the weight of the plane in kilograms.
-    - max_speed : the maximum speed of the plane in kilometers per hour.
-    - engine : the type of engine used by the plane.
-    - flight_altitude : the maximum altitude at which the plane can fly in meters.
-    - length_wing : the length of the wings of the plane in meters.
+    - brand: str : the brand of the plane.
+    - weight: Union[int, float] : the weight of the plane in kilograms.
+    - max_speed: Union[int, float] : the maximum speed of the plane in kilometers per hour.
+    - engine: str : the type of engine used by the plane.
+    - flight_altitude: Union[int, float] : the maximum altitude at which the plane can fly in meters.
+    - length_wing: Union[int, float] : the length of the wings of the plane in meters.
     """
 
     def __init__(
         self,
         *args,
         length_wing: Union[int, float],
-        # brand: str,
-        # weight: Union[int, float],
-        # max_speed: Union[int, float],
-        # engine: str,
-        # flight_altitude: Union[int, float],
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-        # super().__init__(brand, weight, max_speed, engine)
-        # AirTransport.__init__(brand, weight, max_speed, flight_altitude=flight_altitude)
         self.length_wing = length_wing
 
     def start_to_move(self):
