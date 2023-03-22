@@ -23,7 +23,7 @@ class Record:
 
     @surname.setter
     def surname(self, user_input):
-        self._surname = self._validate_field("surname", user_input)
+        self._surname = self.validate_field("surname", user_input)
 
     @property
     def name(self):
@@ -31,7 +31,7 @@ class Record:
 
     @name.setter
     def name(self, user_input):
-        self._name = self._validate_field("name", user_input)
+        self._name = self.validate_field("name", user_input)
 
     @property
     def age(self):
@@ -39,7 +39,7 @@ class Record:
 
     @age.setter
     def age(self, user_input):
-        self._age = self._validate_age(user_input)
+        self._age = self.validate_age(user_input)
 
     @property
     def phone_number(self):
@@ -47,7 +47,7 @@ class Record:
 
     @phone_number.setter
     def phone_number(self, user_input):
-        self._phone_number = self._validate_field("phone_number", user_input)
+        self._phone_number = self.validate_field("phone_number", user_input)
 
     @property
     def email(self):
@@ -55,9 +55,10 @@ class Record:
 
     @email.setter
     def email(self, user_input):
-        self._email = self._validate_field("email", user_input)
+        self._email = self.validate_field("email", user_input)
 
-    def _validate_age(self, user_input, lower_bound=1, upper_bound=99):
+    @staticmethod
+    def validate_age(user_input, lower_bound=1, upper_bound=99):
         """Get and check that user input age is valid."""
         while True:
             try:
@@ -75,7 +76,8 @@ class Record:
 
             user_input = input()
 
-    def _validate_field(self, field, user_input):
+    @staticmethod
+    def validate_field(field, user_input):
         if field == "surname" or field == "name":
             regex = r"[A-Za-z]+"
         elif field == "phone_number":
@@ -100,8 +102,6 @@ class Record:
         print("| Email:   %20s |" % self._email)
 
 
-
-
 class PhoneBook:
     def __init__(self, records=None):
         self.records = [] if not records else records
@@ -120,62 +120,47 @@ class PhoneBook:
         record = Record(surname, name, age, phone_number, email)
         self.records.append(record)
 
+    @staticmethod
+    def display_error(message):
+        print("ERROR: %s" % message)
+
+    def find_by_field(self, field, field_value):
+        """Allows to search by field name and value"""
+        found = False
+        for idx, record in enumerate(self.records):
+            if getattr(record, field) == field_value:
+                record.display_record(idx)
+                found = True
+        if not found:
+            self.display_error(f"Records with {field} '{field_value}' not found")
+
+    # @verbose_mode(verbose)
+    def find_record_by_name(self, value):
+        user_input = Record.validate_field("name", value)
+        self.find_by_field("name", user_input)
+
+    # @verbose_mode(verbose)
+    def find_record_by_age(self, value):
+        user_input = Record.validate_age(value)
+        self.find_by_field("age", user_input)
+
+    def find_record_by_email(self, value):
+        user_input = Record.validate_field("email", value)
+        self.find_by_field("email", user_input)
+
 
 new_ph_book = PhoneBook()
 new_ph_book.add_record_to_phonebook("testSurn", "tName", "10", "+18005550102", "mariia_8@gmail.com")
-new_ph_book.display_phonebook()
-
+new_ph_book.add_record_to_phonebook("NewTest", "newName", "20", "+18005550103", "pavlo9@gmail.com")
+# new_ph_book.display_phonebook()
+print("________")
+# new_ph_book.find_record_by_name("newName")
+# new_ph_book.find_record_by_age("10")
+new_ph_book.find_record_by_email("mariia_8@gmail.com")
 
 class Menu:
     pass
-#
-#
-# def display_record(number, record):
-#     print("--[ %s ]--------------------------" % number)
-#     print("| Surname: %20s |" % record["surname"])
-#     print("| Name:    %20s |" % record["name"])
-#     print("| Age:     %20s |" % record["age"])
-#     print("| Phone:   %20s |" % record["phone_number"])
-#     print("| Email:   %20s |" % record["email"])
-#
-#
-# @verbose_mode(verbose)
-# def display_phonebook(phone_book):
-#     """Print all records from phone book"""
-#     print("#########  Phone book  ##########")
-#
-#     for number, record in enumerate(phone_book):
-#         display_record(number + 1, record)
-#
-#
-# def find_by_field(phone_book, field, field_value):
-#     """Allows to search by field name and value"""
-#     found = False
-#     for idx, el in enumerate(phone_book):
-#         if el[field] == field_value:
-#             display_record(idx, el)
-#             found = True
-#     if not found:
-#         display_error(f"Records with {field} '{field_value}' not found")
-#
-#
-# @verbose_mode(verbose)
-# def find_record_by_name(phone_book):
-#     user_input = get_input_str("Enter name: ", "name")
-#     find_by_field(phone_book, "name", user_input)
-#
-#
-# @verbose_mode(verbose)
-# def find_record_by_age(phone_book):
-#     user_input = get_input_int("Enter desired age: ")
-#     find_by_field(phone_book, "age", user_input)
-#
-#
-# @verbose_mode(verbose)
-# def find_record_by_email(phone_book):
-#     user_input = get_input_str("Enter email: ", "email")
-#     find_by_field(phone_book, "email", user_input)
-#
+
 #
 # def delete_by_field(phone_book, field, field_value):
 #     """Allows to delete record by field name and value"""
@@ -212,10 +197,6 @@ class Menu:
 #         "email": get_input_str("Enter email: ", "email"),
 #     }
 #     phone_book.append(record)
-#
-#
-# def display_error(message):
-#     print("ERROR: %s" % message)
 #
 #
 # @verbose_mode(verbose)
