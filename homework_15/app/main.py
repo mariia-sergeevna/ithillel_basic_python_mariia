@@ -121,6 +121,11 @@ class PhoneBook:
         for number, record in enumerate(self.records):
             record.display_record(number + 1)
 
+    # @verbose_mode(verbose)
+    def display_phonebook_sorted_by_age(self):
+        self.records = sorted(self.records, key=lambda record: record.age)
+        self.display_phonebook()
+
     @staticmethod
     def display_error(message):
         print("ERROR: %s" % message)
@@ -150,9 +155,9 @@ class PhoneBook:
         self.find_by_field("email", user_input)
 
     # @verbose_mode(verbose)
-    def increase_age(self, value):
+    def increase_age(self):
         """Allows to increase age by entered value for each record in phone book"""
-        number = Record.validate_age(value)
+        number = Record.validate_age(input("enter value: "))
         for record in self.records:
             record.age += number
 
@@ -179,6 +184,77 @@ class PhoneBook:
         input_surname = Record.validate_field("surname", value)
         self.delete_by_field("surname", input_surname)
 
+    # @verbose_mode(verbose)
+    def count_all_entries_in_phonebook(self):
+        print("Total number of entries: ", len(self.records))
+
+
+    # @verbose_mode(verbose)
+    def avr_age_of_all_persons(self):
+        print(round(sum(record.age for record in self.records) / len(self.records)))
+
+
+class Menu:
+    def __init__(self, filename, verbose):
+        self.filename = filename
+        self.verbose = verbose
+
+    def run(self):
+        phonebook = PhoneBook()
+        phonebook.add_record_to_phonebook("testSurn", "tName", "10", "+18005550102", "mariia_8@gmail.com")
+        while True:
+            try:
+                menu = {
+                    "1": PhoneBook.display_phonebook,
+                    "2": PhoneBook.display_phonebook_sorted_by_age,
+                    "3": PhoneBook.add_record_to_phonebook,
+                    "4": PhoneBook.find_record_by_name,
+                    "5": PhoneBook.find_record_by_age,
+                    "6": PhoneBook.find_record_by_email,
+                    "7": PhoneBook.delete_record_by_name,
+                    "8": PhoneBook.count_all_entries_in_phonebook,
+                    "9": PhoneBook.avr_age_of_all_persons,
+                    "10": PhoneBook.increase_age,
+                    # "0": finish_program,
+                    # "s": save_to_file,
+                    # "l": load_from_file,
+                }
+
+                # print_prompt()
+                # user_input = get_input_choice_menu(menu)
+                user_input = input("choice menu: ")
+
+                match user_input:
+                    # case "0":
+                    #     prompt_to_save(file_name, phone_book)
+                    #     menu[user_input]()
+                    # case "l":
+                    #     prompt_to_save(file_name, phone_book)
+                    #     phone_book = load_from_file(file_name)
+                    #     menu[user_input](file_name)
+                    case "s":
+                        menu[user_input]()
+                    case _:
+                        print("i'm here")
+                        menu[user_input](phonebook)
+
+            except Exception as ex:
+                PhoneBook.display_error("Something went wrong. Try again...")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="")
+
+    parser.add_argument("filename", type=str, help="Path to file_name")
+    parser.add_argument("verbose", type=bool, help="Display detailed processing info")
+
+    args = parser.parse_args()
+    if not os.path.exists(args.filename):
+        raise FileExistsError(f"'{args.filename}' not found. Check the file name and path.")
+
+    menu = Menu(args.filename, args.verbose)
+    menu.run()
+
 new_ph_book = PhoneBook()
 new_ph_book.add_record_to_phonebook("testSurn", "tName", "10", "+18005550102", "mariia_8@gmail.com")
 new_ph_book.add_record_to_phonebook("NewTest", "newName", "20", "+18005550103", "pavlo9@gmail.com")
@@ -189,30 +265,13 @@ print("________")
 # new_ph_book.find_record_by_email("mariia_8@gmail.com")
 # new_ph_book.increase_age(10)
 # new_ph_book.delete_record_by_name("tName")
-new_ph_book.delete_record_by_surname("NewTest")
-new_ph_book.display_phonebook()
+# new_ph_book.delete_record_by_surname("NewTest")
+# new_ph_book.display_phonebook()
+new_ph_book.display_phonebook_sorted_by_age()
+new_ph_book.count_all_entries_in_phonebook()
+new_ph_book.avr_age_of_all_persons()
 
 
-class Menu:
-    pass
-
-
-# @verbose_mode(verbose)
-# def count_all_entries_in_phonebook(phone_book):
-#     print("Total number of entries: ", len(phone_book))
-#
-#
-# @verbose_mode(verbose)
-# def display_phonebook_sorted_by_age(phone_book):
-#     sorted_by_age = sorted(phone_book, key=lambda field: field["age"])
-#     for number, entry in enumerate(sorted_by_age):
-#         display_record(number + 1, entry)
-#
-#
-# @verbose_mode(verbose)
-# def avr_age_of_all_persons(phone_book):
-#     print(round(sum(user["age"] for user in phone_book) / len(phone_book)))
-#
 #
 # @verbose_mode(verbose)
 # def save_to_file(file_name, phone_book):
@@ -266,60 +325,5 @@ class Menu:
 #     print("\n".join(options))
 #
 #
-# def main():
-#     parser = argparse.ArgumentParser(description="")
-#
-#     parser.add_argument("filename", type=str, help="Path to file_name")
-#     parser.add_argument("verbose", type=bool, help="Display detailed processing info")
-#
-#     args = parser.parse_args()
-#
-#     global verbose
-#     verbose = args.verbose
-#
-#     phone_book = []
-#
-#     file_name = args.filename
-#     if not os.path.exists(file_name):
-#         raise FileExistsError(f"'{file_name}' not found. Check the file name and path.")
-#
-#     while True:
-#         try:
-#             menu = {
-#                 "1": display_phonebook,
-#                 "2": display_phonebook_sorted_by_age,
-#                 "3": add_record_to_phonebook,
-#                 "4": find_record_by_name,
-#                 "5": find_record_by_age,
-#                 "6": find_record_by_email,
-#                 "7": delete_record_by_name,
-#                 "8": count_all_entries_in_phonebook,
-#                 "9": avr_age_of_all_persons,
-#                 "10": increase_age,
-#                 "0": finish_program,
-#                 "s": save_to_file,
-#                 "l": load_from_file,
-#             }
-#
-#             print_prompt()
-#             user_input = get_input_choice_menu(menu)
-#
-#             match user_input:
-#                 case "0":
-#                     prompt_to_save(file_name, phone_book)
-#                     menu[user_input]()
-#                 case "l":
-#                     prompt_to_save(file_name, phone_book)
-#                     phone_book = load_from_file(file_name)
-#                     menu[user_input](file_name)
-#                 case "s":
-#                     menu[user_input](file_name, phone_book)
-#                 case _:
-#                     menu[user_input](phone_book)
-#
-#         except Exception as ex:
-#             display_error("Something went wrong. Try again...")
-#
-#
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
