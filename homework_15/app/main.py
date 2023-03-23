@@ -2,6 +2,7 @@ import json
 import os
 import argparse
 import re
+from copy import copy
 
 from utilities.input import get_input_str, get_input_int, get_input_choice_menu
 from utilities.wrapper import verbose_mode
@@ -107,18 +108,18 @@ class PhoneBook:
         self.records = [] if not records else records
 
     # @verbose_mode(verbose)
+    def add_record_to_phonebook(self, surname, name, age, phone_number, email):
+        """Add 1 record to phone book"""
+        record = Record(surname, name, age, phone_number, email)
+        self.records.append(record)
+
+    # @verbose_mode(verbose)
     def display_phonebook(self):
         """Print all records from phone book"""
         print("#########  Phone book  ##########")
 
         for number, record in enumerate(self.records):
             record.display_record(number + 1)
-
-    # @verbose_mode(verbose)
-    def add_record_to_phonebook(self, surname, name, age, phone_number, email):
-        """Add 1 record to phone book"""
-        record = Record(surname, name, age, phone_number, email)
-        self.records.append(record)
 
     @staticmethod
     def display_error(message):
@@ -148,6 +149,35 @@ class PhoneBook:
         user_input = Record.validate_field("email", value)
         self.find_by_field("email", user_input)
 
+    # @verbose_mode(verbose)
+    def increase_age(self, value):
+        """Allows to increase age by entered value for each record in phone book"""
+        number = Record.validate_age(value)
+        for record in self.records:
+            record.age += number
+
+    def delete_by_field(self, field, field_value):
+        """Allows to delete record by field name and value"""
+        # copy_phonebook = copy(self.records)
+        found = False
+        for record in copy(self.records):
+            if getattr(record, field) == field_value:
+                self.records.remove(record)
+                found = True
+        if not found:
+            print(f"Records with {field} '{field_value}' not found")
+
+
+    # @verbose_mode(verbose)
+    def delete_record_by_name(self, value):
+        input_name = Record.validate_field("name", value)
+        self.delete_by_field("name", input_name)
+
+
+    # @verbose_mode(verbose)
+    def delete_record_by_surname(self, value):
+        input_surname = Record.validate_field("surname", value)
+        self.delete_by_field("surname", input_surname)
 
 new_ph_book = PhoneBook()
 new_ph_book.add_record_to_phonebook("testSurn", "tName", "10", "+18005550102", "mariia_8@gmail.com")
@@ -156,49 +186,17 @@ new_ph_book.add_record_to_phonebook("NewTest", "newName", "20", "+18005550103", 
 print("________")
 # new_ph_book.find_record_by_name("newName")
 # new_ph_book.find_record_by_age("10")
-new_ph_book.find_record_by_email("mariia_8@gmail.com")
+# new_ph_book.find_record_by_email("mariia_8@gmail.com")
+# new_ph_book.increase_age(10)
+# new_ph_book.delete_record_by_name("tName")
+new_ph_book.delete_record_by_surname("NewTest")
+new_ph_book.display_phonebook()
+
 
 class Menu:
     pass
 
-#
-# def delete_by_field(phone_book, field, field_value):
-#     """Allows to delete record by field name and value"""
-#     copy_phonebook = phone_book[:]
-#     found = False
-#     for idx, el in enumerate(copy_phonebook):
-#         if el[field] == field_value:
-#             del phone_book[idx]
-#             found = True
-#     if not found:
-#         print(f"Records with {field} '{field_value}' not found")
-#
-#
-# @verbose_mode(verbose)
-# def delete_record_by_name(phone_book):
-#     input_name = get_input_str("Enter name: ", "name")
-#     delete_by_field(phone_book, "name", input_name)
-#
-#
-# @verbose_mode(verbose)
-# def delete_record_by_surname(phone_book):
-#     input_surname = get_input_str("Enter surname: ", "surname")
-#     delete_by_field(phone_book, "surname", input_surname)
-#
-#
-# @verbose_mode(verbose)
-# def add_record_to_phonebook(phone_book):
-#     """Add 1 record to phone book"""
-#     record = {
-#         "surname": get_input_str("Enter surname: ", "surname"),
-#         "name": get_input_str("Enter name: ", "name"),
-#         "age": get_input_int("Enter age: "),
-#         "phone_number": get_input_str("Enter phone num.: ", "phone_number"),
-#         "email": get_input_str("Enter email: ", "email"),
-#     }
-#     phone_book.append(record)
-#
-#
+
 # @verbose_mode(verbose)
 # def count_all_entries_in_phonebook(phone_book):
 #     print("Total number of entries: ", len(phone_book))
@@ -209,14 +207,6 @@ class Menu:
 #     sorted_by_age = sorted(phone_book, key=lambda field: field["age"])
 #     for number, entry in enumerate(sorted_by_age):
 #         display_record(number + 1, entry)
-#
-#
-# @verbose_mode(verbose)
-# def increase_age(phone_book):
-#     """Allows to increase age by entered value for each record in phone book"""
-#     number = get_input_int("Enter a number to increase the age: ")
-#     for record in phone_book:
-#         record.update((k, v + number) for k, v in record.items() if k == "age")
 #
 #
 # @verbose_mode(verbose)
