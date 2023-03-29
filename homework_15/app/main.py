@@ -92,7 +92,6 @@ class PhoneBook:
                     print("Request handled is finished.")
                 return func_result
             return display_status
-
         return wrapper
 
     @verbose_mode()
@@ -107,19 +106,21 @@ class PhoneBook:
         )
         self.records.append(record)
 
-    @staticmethod
+    # @staticmethod
     @verbose_mode()
-    def display_phonebook(records):
+    def display_phonebook(self, sorted_records=None):
         """Print all records from phone book"""
         print("#########  Phone book  ##########")
+        records = sorted_records if sorted_records else self.records
 
         for number, record in enumerate(records):
             record.display_record(number + 1)
 
     @verbose_mode()
     def display_phonebook_sorted_by_age(self):
-        sorted_records = sorted(self.records, key=lambda record: record.age)
-        self.display_phonebook(sorted_records)
+        sorted_records = sorted(self.records, key=lambda entry: entry.age)
+        for number, record in enumerate(sorted_records):
+            record.display_record(number + 1)
 
     @staticmethod
     def display_error(message):
