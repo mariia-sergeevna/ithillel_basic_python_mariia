@@ -106,7 +106,6 @@ class PhoneBook:
         )
         self.records.append(record)
 
-    # @staticmethod
     @verbose_mode()
     def display_phonebook(self, sorted_records=None):
         """Print all records from phone book"""
@@ -119,8 +118,7 @@ class PhoneBook:
     @verbose_mode()
     def display_phonebook_sorted_by_age(self):
         sorted_records = sorted(self.records, key=lambda entry: entry.age)
-        for number, record in enumerate(sorted_records):
-            record.display_record(number + 1)
+        self.display_phonebook(sorted_records=sorted_records)
 
     @staticmethod
     def display_error(message):
