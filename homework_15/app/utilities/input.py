@@ -1,7 +1,7 @@
 import re
 
 
-def get_input_int(prompt, lower_bound=1, upper_bound=99):
+def validate_age(prompt, lower_bound=1, upper_bound=99):
     """Get and check that user input age is valid."""
     while True:
         user_input = input(prompt)
@@ -36,7 +36,7 @@ def get_input_choice_menu(option):
             )
 
 
-def get_input_str(prompt, field):
+def validate_str(prompt, field):
     """
     Get and check that user input is valid for fields: surname, name, phone number, email.
     """
@@ -44,8 +44,10 @@ def get_input_str(prompt, field):
         regex = r"[A-Za-z]+"
     elif field == "phone_number":
         regex = r"\+1\d{10}$"
-    else:
+    elif field == "email":
         regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
+    else:
+        raise Exception("Invalid field")
     while True:
         user_input = input(prompt)
         if re.fullmatch(regex, user_input):
