@@ -3,12 +3,23 @@ import os
 import argparse
 from copy import copy
 from functools import wraps
+from typing import Union, Callable, Any
 
 from utilities.input import validate_age, validate_str, get_input_choice_menu
 
 
 class Record:
-    def __init__(self, surname, name, age, phone_number, email):
+    """
+    A class representing a record in a phone book.
+
+    Attributes:
+        _surname: The surname of the person in the record.
+        _name: The name of the person in the record.
+        _age: The age of the person in the record.
+        _phone_number: The phone number of the person in the record.
+        _email: The email address of the person in the record.
+    """
+    def __init__(self, surname: str, name: str, age: int, phone_number: str, email: str) -> None:
         self._surname = surname
         self._name = name
         self._age = age
@@ -20,7 +31,7 @@ class Record:
         return self._surname
 
     @surname.setter
-    def surname(self, user_input):
+    def surname(self, user_input: str):
         self._surname = validate_str("surname", user_input)
 
     @property
@@ -28,7 +39,7 @@ class Record:
         return self._name
 
     @name.setter
-    def name(self, user_input):
+    def name(self, user_input: str):
         self._name = validate_str("name", user_input)
 
     @property
@@ -36,7 +47,7 @@ class Record:
         return self._age
 
     @age.setter
-    def age(self, user_input):
+    def age(self, user_input: int):
         self._age = validate_age(user_input)
 
     @property
@@ -44,7 +55,7 @@ class Record:
         return self._phone_number
 
     @phone_number.setter
-    def phone_number(self, user_input):
+    def phone_number(self, user_input: str):
         self._phone_number = validate_str("phone_number", user_input)
 
     @property
@@ -52,10 +63,16 @@ class Record:
         return self._email
 
     @email.setter
-    def email(self, user_input):
+    def email(self, user_input: str):
         self._email = validate_str("email", user_input)
 
-    def display_record(self, number):
+    def display_record(self, number: int) -> None:
+        """
+        Displays the record information in a formatted way.
+
+        Args:
+            number: The number of the record in the phone book.
+        """
         print(f"--[ {number} ]----------------------------")
         print(f"|  Surname: {self._surname:>20}  |")
         print(f"|  Name:    {self._name:>20}  |")
@@ -63,19 +80,32 @@ class Record:
         print(f"|  Phone:   {self._phone_number:>20}  |")
         print(f"|  Email:   {self._email:>20}  |")
 
-    def serialize(self):
+    def serialize(self) -> dict:
+        """Returns the record information in a serialized form"""
         return {
-            "surname": self._surname,
-            "name": self._name,
-            "age": self._age,
-            "phone_number": self._phone_number,
-            "email": self._email
+            "surname": self.surname,
+            "name": self.name,
+            "age": self.age,
+            "phone_number": self.phone_number,
+            "email": self.email
         }
 
 
 class PhoneBook:
+    """
+    A class that represents a phone book.
+
+    Attributes:
+        records: A list of records in the phone book. Defaults to an empty list if not provided.
+        verbose: A flag that controls the verbose mode. When set to True, the class prints the status
+                    of the function execution. Defaults to False if not provided.
+    """
+    def __init__(self, records: Union[list, None] = None, verbose: bool = False) -> None:
+        self.records = [] if not records else records
+        self.verbose = verbose
+
     @staticmethod
-    def verbose_mode():
+    def verbose_mode() -> Callable[[Any], Any]:
         def wrapper(func):
             @wraps(func)
             def display_status(*args, **kwargs):
@@ -89,12 +119,8 @@ class PhoneBook:
             return display_status
         return wrapper
 
-    def __init__(self, records=None, verbose=False):
-        self.records = [] if not records else records
-        self.verbose = verbose
-
     @verbose_mode()
-    def add_record_to_phonebook(self):
+    def add_record_to_phonebook(self) -> None:
         """Add 1 record to phone book"""
         record = Record(
             surname=validate_str("Enter surname: ", "surname"),
@@ -106,7 +132,7 @@ class PhoneBook:
         self.records.append(record)
 
     @verbose_mode()
-    def display_phonebook(self, sorted_records=None):
+    def display_phonebook(self, sorted_records=None) -> None:
         """Print all records from phone book"""
         print("#########  Phone book  ##########")
         records = sorted_records if sorted_records else self.records
@@ -115,7 +141,10 @@ class PhoneBook:
             record.display_record(number + 1)
 
     @verbose_mode()
-    def display_phonebook_sorted_by_age(self):
+    def display_phonebook_sorted_by_age(self) -> None:
+        """
+        Displays all the records in the phone book sorted by age in ascending order.
+        """
         sorted_records = sorted(self.records, key=lambda entry: entry.age)
         self.display_phonebook(sorted_records=sorted_records)
 
@@ -123,7 +152,7 @@ class PhoneBook:
     def display_error(message):
         print("ERROR: %s" % message)
 
-    def find_by_field(self, field, field_value):
+    def find_by_field(self, field: str, field_value: str) -> None:
         """Allows to search by field name and value"""
         for idx, record in enumerate(self.records):
             if getattr(record, field) == field_value:
@@ -132,29 +161,29 @@ class PhoneBook:
         self.display_error(f"Records with {field} '{field_value}' not found")
 
     @verbose_mode()
-    def find_record_by_name(self):
+    def find_record_by_name(self) -> None:
         user_input = validate_str("Enter name: ", "name")
         self.find_by_field("name", user_input)
 
     @verbose_mode()
-    def find_record_by_age(self):
+    def find_record_by_age(self) -> None:
         user_input = validate_age("Enter desired age: ")
         self.find_by_field("age", user_input)
 
     @verbose_mode()
-    def find_record_by_email(self):
+    def find_record_by_email(self) -> None:
         user_input = validate_str("Enter email: ", "email")
         self.find_by_field("email", user_input)
 
     @verbose_mode()
-    def increase_age(self):
+    def increase_age(self) -> None:
         """Allows to increase age by entered value for each record in phone book"""
         number = validate_age("Enter a number to increase the age: ")
         for record in self.records:
             record._age += number
 
     @verbose_mode()
-    def delete_by_field(self, field, field_value):
+    def delete_by_field(self, field, field_value) -> None:
         """Allows to delete record by field name and value"""
         found = False
         for record in copy(self.records):
@@ -165,33 +194,35 @@ class PhoneBook:
             print(f"Records with {field} '{field_value}' not found")
 
     @verbose_mode()
-    def delete_record_by_name(self):
+    def delete_record_by_name(self) -> None:
         input_name = validate_str("Enter name: ", "name")
         self.delete_by_field("name", input_name)
 
     @verbose_mode()
-    def delete_record_by_surname(self):
+    def delete_record_by_surname(self) -> None:
         input_surname = validate_str("Enter surname: ", "surname")
         self.delete_by_field("surname", input_surname)
 
     @verbose_mode()
-    def count_all_entries_in_phonebook(self):
+    def count_all_entries_in_phonebook(self) -> None:
+        """Counts the number of entries in the phone book."""
         print("Total number of entries: ", len(self.records))
 
     @verbose_mode()
-    def avr_age_of_all_persons(self):
+    def avr_age_of_all_persons(self) -> None:
+        """Calculates the average age of all the persons in the phone book."""
         print(round(sum(record.age for record in self.records) / len(self.records)))
 
     @verbose_mode()
-    def save_to_file(self, filename):
-        """Save current phonebook to file passed in parameter"""
+    def save_to_file(self, filename: str) -> None:
+        """Saves the phone book to a file with the given filename."""
         serialized_phonebook = [record.serialize() for record in self.records]
         with open(filename, "w", encoding="utf8") as f:
             json.dump(serialized_phonebook, f, indent=4)
 
     @verbose_mode()
-    def load_from_file(self, filename):
-        """Load phonebook from file passed in parameter"""
+    def load_from_file(self, filename: str) -> None:
+        """Loads the phone book from a file with the given filename."""
         with open(filename, "r") as f:
             load_data = json.load(f)
             records = [Record(**record_data) for record_data in load_data]
@@ -199,13 +230,20 @@ class PhoneBook:
 
 
 class Menu:
-    def __init__(self, filename, verbose):
+    """
+    A class that represents the main menu of the phone book application.
+
+    Attributes:
+        filename: The name of the file to save/load the phone book data.
+        verbose: A flag to indicate if the application should display additional information.
+    """
+    def __init__(self, filename: str, verbose: bool) -> None:
         self.filename = filename
         self.verbose = verbose
 
     @staticmethod
     def print_prompt():
-        """Display available options"""
+        """Display the available options in the main menu."""
         options = [
             "~ Welcome to phonebook ~",
             "Select one of actions below:",
@@ -227,7 +265,7 @@ class Menu:
         ]
         print("\n".join(options))
 
-    def prompt_to_save(self, phonebook):
+    def prompt_to_save(self, phonebook) -> None:
         """Display prompt to save current phone book and save it"""
         choice = {"y": True, "n": False}
         print("Do you want to save changes? Press 'y' for saving and 'n' for break")
@@ -236,84 +274,52 @@ class Menu:
             phonebook.save_to_file(self.filename)
 
     @staticmethod
-    def finish_program():
+    def finish_program() -> None:
+        """Exit the application"""
         exit()
 
-    def run(self):
+    def run(self) -> None:
+        """Run the phone book application menu"""
         phonebook = PhoneBook(verbose=self.verbose)
 
-        # while True:
-        #     try:
-        #         menu = {
-        #             "1": PhoneBook.display_phonebook,
-        #             "2": PhoneBook.display_phonebook_sorted_by_age,
-        #             "3": PhoneBook.add_record_to_phonebook,
-        #             "4": PhoneBook.find_record_by_name,
-        #             "5": PhoneBook.find_record_by_age,
-        #             "6": PhoneBook.find_record_by_email,
-        #             "7": PhoneBook.delete_record_by_name,
-        #             "8": PhoneBook.count_all_entries_in_phonebook,
-        #             "9": PhoneBook.avr_age_of_all_persons,
-        #             "10": PhoneBook.increase_age,
-        #             "0": self.finish_program,
-        #             "s": self.save_to_file,
-        #             "l": self.load_from_file,
-        #         }
-        #
-        #         self.print_prompt()
-        #         user_input = get_input_choice_menu(menu)
-        #         # user_input = input("choice menu: ")
-        #
-        #         match user_input:
-        #             case "0":
-        #                 self.prompt_to_save(phonebook)
-        #                 menu[user_input]()
-        #             case "l":
-        #                 self.prompt_to_save(phonebook)
-        #                 phonebook = self.load_from_file(self.filename)
-        #                 menu[user_input](self.filename)
-        #             case "s":
-        #                 menu[user_input]()
-        #             case _:
-        #                 # print("i'm here")
-        #                 menu[user_input](phonebook)
-        #
-        #     except Exception as ex:
-        #         PhoneBook.display_error("Something went wrong. Try again...")
         while True:
-            menu = {
-                "1": phonebook.display_phonebook,
-                "2": phonebook.display_phonebook_sorted_by_age,
-                "3": phonebook.add_record_to_phonebook,
-                "4": phonebook.find_record_by_name,
-                "5": phonebook.find_record_by_age,
-                "6": phonebook.find_record_by_email,
-                "7": phonebook.delete_record_by_name,
-                "8": phonebook.delete_record_by_surname,
-                "9": phonebook.count_all_entries_in_phonebook,
-                "10": phonebook.avr_age_of_all_persons,
-                "11": phonebook.increase_age,
-                "0": self.finish_program,
-                "s": phonebook.save_to_file,
-                "l": phonebook.load_from_file,
-            }
+            try:
+                menu = {
+                        "1": phonebook.display_phonebook,
+                        "2": phonebook.display_phonebook_sorted_by_age,
+                        "3": phonebook.add_record_to_phonebook,
+                        "4": phonebook.find_record_by_name,
+                        "5": phonebook.find_record_by_age,
+                        "6": phonebook.find_record_by_email,
+                        "7": phonebook.delete_record_by_name,
+                        "8": phonebook.delete_record_by_surname,
+                        "9": phonebook.count_all_entries_in_phonebook,
+                        "10": phonebook.avr_age_of_all_persons,
+                        "11": phonebook.increase_age,
+                        "0": self.finish_program,
+                        "s": phonebook.save_to_file,
+                        "l": phonebook.load_from_file,
+                    }
 
-            self.print_prompt()
-            user_input = get_input_choice_menu(menu)
+                self.print_prompt()
+                user_input = get_input_choice_menu(menu)
 
-            match user_input:
-                case "1":
-                    menu[user_input](phonebook.records)
-                case "0":
-                    self.prompt_to_save(phonebook)
-                    menu[user_input]()
-                case "l":
-                    self.prompt_to_save(phonebook)
-                    phonebook.load_from_file(self.filename)
-                case "s":
-                    phonebook.save_to_file(self.filename)
-                case _:
-                    menu[user_input]()
+                match user_input:
+                    case "1":
+                        menu[user_input](phonebook.records)
+                    case "0":
+                        self.prompt_to_save(phonebook)
+                        menu[user_input]()
+                    case "l":
+                        self.prompt_to_save(phonebook)
+                        phonebook.load_from_file(self.filename)
+                    case "s":
+                        phonebook.save_to_file(self.filename)
+                    case _:
+                        menu[user_input]()
+
+            except Exception as ex:
+                PhoneBook.display_error("Something went wrong. Try again...")
 
 
 def main():
