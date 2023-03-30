@@ -2,9 +2,9 @@ import json
 import os
 import argparse
 from copy import copy
-from functools import wraps
 from typing import Union, Callable, Any
 
+from utilities.wrapper import verbose_start_and_end
 from utilities.input import validate_age, validate_str, get_input_choice_menu
 
 
@@ -110,24 +110,7 @@ class PhoneBook:
         self.records = [] if not records else records
         self.verbose = verbose
 
-    @staticmethod
-    def verbose_mode() -> Callable[[Any], Any]:
-        def wrapper(func):
-            @wraps(func)
-            def display_status(*args, **kwargs):
-                self = args[0]
-                if self.verbose:
-                    print("Starting handle your request...")
-                func_result = func(*args, **kwargs)
-                if self.verbose:
-                    print("Request handled is finished.")
-                return func_result
-
-            return display_status
-
-        return wrapper
-
-    @verbose_mode()
+    @verbose_start_and_end
     def add_record_to_phonebook(self) -> None:
         """Add 1 record to phone book"""
         record = Record(
@@ -139,7 +122,7 @@ class PhoneBook:
         )
         self.records.append(record)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def display_phonebook(self, sorted_records=None) -> None:
         """Print all records from phone book"""
         print("#########  Phone book  ##########")
@@ -148,7 +131,7 @@ class PhoneBook:
         for number, record in enumerate(records):
             record.display_record(number + 1)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def display_phonebook_sorted_by_age(self) -> None:
         """
         Displays all the records in the phone book sorted by age in ascending order.
@@ -168,29 +151,29 @@ class PhoneBook:
                 return
         self.display_error(f"Records with {field} '{field_value}' not found")
 
-    @verbose_mode()
+    @verbose_start_and_end
     def find_record_by_name(self) -> None:
         user_input = validate_str("Enter name: ", "name")
         self.find_by_field("name", user_input)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def find_record_by_age(self) -> None:
         user_input = validate_age("Enter desired age: ")
         self.find_by_field("age", user_input)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def find_record_by_email(self) -> None:
         user_input = validate_str("Enter email: ", "email")
         self.find_by_field("email", user_input)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def increase_age(self) -> None:
         """Allows to increase age by entered value for each record in phone book"""
         number = validate_age("Enter a number to increase the age: ")
         for record in self.records:
             record._age += number
 
-    @verbose_mode()
+    @verbose_start_and_end
     def delete_by_field(self, field, field_value) -> None:
         """Allows to delete record by field name and value"""
         found = False
@@ -201,34 +184,34 @@ class PhoneBook:
         if not found:
             print(f"Records with {field} '{field_value}' not found")
 
-    @verbose_mode()
+    @verbose_start_and_end
     def delete_record_by_name(self) -> None:
         input_name = validate_str("Enter name: ", "name")
         self.delete_by_field("name", input_name)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def delete_record_by_surname(self) -> None:
         input_surname = validate_str("Enter surname: ", "surname")
         self.delete_by_field("surname", input_surname)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def count_all_entries_in_phonebook(self) -> None:
         """Counts the number of entries in the phone book."""
         print("Total number of entries: ", len(self.records))
 
-    @verbose_mode()
+    @verbose_start_and_end
     def avr_age_of_all_persons(self) -> None:
         """Calculates the average age of all the persons in the phone book."""
         print(round(sum(record.age for record in self.records) / len(self.records)))
 
-    @verbose_mode()
+    @verbose_start_and_end
     def save_to_file(self, filename: str) -> None:
         """Saves the phone book to a file with the given filename."""
         serialized_phonebook = [record.serialize() for record in self.records]
         with open(filename, "w", encoding="utf8") as f:
             json.dump(serialized_phonebook, f, indent=4)
 
-    @verbose_mode()
+    @verbose_start_and_end
     def load_from_file(self, filename: str) -> None:
         """Loads the phone book from a file with the given filename."""
         with open(filename, "r") as f:
