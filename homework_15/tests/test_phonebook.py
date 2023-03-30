@@ -28,7 +28,7 @@ class SerializeTestCase(unittest.TestCase):
             "name": "Nik",
             "age": 25,
             "phone_number": "+18005550102",
-            "email": "nik@gmail.com"
+            "email": "nik@gmail.com",
         }
         text_error = "Result after serialize must be dict with class attributes"
         self.assertEqual(record.serialize(), expected_result, text_error)
@@ -41,9 +41,9 @@ class DeleteTestCase(unittest.TestCase):
         """Test that deleting a record from a PhoneBook object removes it from the list of records."""
         records = [
             Record("Ivanov", "Ivan", 30, "+18005550112", "van@test.com"),
-            Record("Petrov", "Petr", 25, "+18005550105", "petr@test.com")
+            Record("Petrov", "Petr", 25, "+18005550105", "petr@test.com"),
         ]
-        with patch('builtins.input', return_value="Ivan"):
+        with patch("builtins.input", return_value="Ivan"):
             phone_book = PhoneBook(records=records)
             phone_book.delete_record_by_name()
             self.assertEqual(len(phone_book.records), 1)

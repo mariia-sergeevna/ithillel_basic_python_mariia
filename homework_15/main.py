@@ -19,7 +19,10 @@ class Record:
         _phone_number: The phone number of the person in the record.
         _email: The email address of the person in the record.
     """
-    def __init__(self, surname: str, name: str, age: int, phone_number: str, email: str) -> None:
+
+    def __init__(
+        self, surname: str, name: str, age: int, phone_number: str, email: str
+    ) -> None:
         self._surname = surname
         self._name = name
         self._age = age
@@ -87,7 +90,7 @@ class Record:
             "name": self.name,
             "age": self.age,
             "phone_number": self.phone_number,
-            "email": self.email
+            "email": self.email,
         }
 
 
@@ -100,7 +103,10 @@ class PhoneBook:
         verbose: A flag that controls the verbose mode. When set to True, the class prints the status
                     of the function execution. Defaults to False if not provided.
     """
-    def __init__(self, records: Union[list, None] = None, verbose: bool = False) -> None:
+
+    def __init__(
+        self, records: Union[list, None] = None, verbose: bool = False
+    ) -> None:
         self.records = [] if not records else records
         self.verbose = verbose
 
@@ -116,7 +122,9 @@ class PhoneBook:
                 if self.verbose:
                     print("Request handled is finished.")
                 return func_result
+
             return display_status
+
         return wrapper
 
     @verbose_mode()
@@ -127,7 +135,7 @@ class PhoneBook:
             name=validate_str("Enter name: ", "name"),
             age=validate_age("Enter age: "),
             phone_number=validate_str("Enter phone num.: ", "phone_number"),
-            email=validate_str("Enter email: ", "email")
+            email=validate_str("Enter email: ", "email"),
         )
         self.records.append(record)
 
@@ -237,6 +245,7 @@ class Menu:
         filename: The name of the file to save/load the phone book data.
         verbose: A flag to indicate if the application should display additional information.
     """
+
     def __init__(self, filename: str, verbose: bool) -> None:
         self.filename = filename
         self.verbose = verbose
@@ -285,21 +294,21 @@ class Menu:
         while True:
             try:
                 menu = {
-                        "1": phonebook.display_phonebook,
-                        "2": phonebook.display_phonebook_sorted_by_age,
-                        "3": phonebook.add_record_to_phonebook,
-                        "4": phonebook.find_record_by_name,
-                        "5": phonebook.find_record_by_age,
-                        "6": phonebook.find_record_by_email,
-                        "7": phonebook.delete_record_by_name,
-                        "8": phonebook.delete_record_by_surname,
-                        "9": phonebook.count_all_entries_in_phonebook,
-                        "10": phonebook.avr_age_of_all_persons,
-                        "11": phonebook.increase_age,
-                        "0": self.finish_program,
-                        "s": phonebook.save_to_file,
-                        "l": phonebook.load_from_file,
-                    }
+                    "1": phonebook.display_phonebook,
+                    "2": phonebook.display_phonebook_sorted_by_age,
+                    "3": phonebook.add_record_to_phonebook,
+                    "4": phonebook.find_record_by_name,
+                    "5": phonebook.find_record_by_age,
+                    "6": phonebook.find_record_by_email,
+                    "7": phonebook.delete_record_by_name,
+                    "8": phonebook.delete_record_by_surname,
+                    "9": phonebook.count_all_entries_in_phonebook,
+                    "10": phonebook.avr_age_of_all_persons,
+                    "11": phonebook.increase_age,
+                    "0": self.finish_program,
+                    "s": phonebook.save_to_file,
+                    "l": phonebook.load_from_file,
+                }
 
                 self.print_prompt()
                 user_input = get_input_choice_menu(menu)
@@ -326,11 +335,15 @@ def main():
     parser = argparse.ArgumentParser(description="")
 
     parser.add_argument("filename", type=str, help="Path to file_name")
-    parser.add_argument("--verbose", action="store_true", help="Display detailed processing info")
+    parser.add_argument(
+        "--verbose", action="store_true", help="Display detailed processing info"
+    )
 
     args = parser.parse_args()
     if not os.path.exists(args.filename):
-        raise FileExistsError(f"'{args.filename}' not found. Check the file name and path.")
+        raise FileExistsError(
+            f"'{args.filename}' not found. Check the file name and path."
+        )
 
     menu = Menu(args.filename, args.verbose)
     menu.run()

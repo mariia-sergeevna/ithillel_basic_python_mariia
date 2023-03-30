@@ -1,7 +1,7 @@
 import re
 
 
-def validate_age(prompt, lower_bound=1, upper_bound=99):
+def validate_age(prompt: str, lower_bound: int = 1, upper_bound: int = 99) -> int:
     """Get and check that user input age is valid."""
     while True:
         user_input = input(prompt)
@@ -19,7 +19,7 @@ def validate_age(prompt, lower_bound=1, upper_bound=99):
             return input_age
 
 
-def get_input_choice_menu(option):
+def get_input_choice_menu(option: dict) -> str:
     """Get and check that user menu choice is valid."""
     while True:
         user_input = input("Choose one of the options: ").lower()
@@ -36,7 +36,7 @@ def get_input_choice_menu(option):
             )
 
 
-def validate_str(prompt, field):
+def validate_str(prompt: str, field: str) -> str:
     """
     Get and check that user input is valid for fields: surname, name, phone number, email.
     """
