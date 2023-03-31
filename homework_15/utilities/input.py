@@ -11,9 +11,13 @@ def validate_age(value, lower_bound: int = 1, upper_bound: int = 99) -> int:
         raise ValueError(f"Invalid input! '{value}' is not an integer value!")
     value = int(value)
     if value < lower_bound:
-        raise ValueError(f"Entered age should be greater than or equal to {lower_bound}")
+        raise ValueError(
+            f"Entered age should be greater than or equal to {lower_bound}"
+        )
     elif value > upper_bound:
-        raise ValueError(f"Entered age should be smaller than or equal to {upper_bound}")
+        raise ValueError(
+            f"Entered age should be smaller than or equal to {upper_bound}"
+        )
     else:
         return value
 
@@ -53,9 +57,7 @@ def validate_str(field: Field, value) -> bool:
 
 def validate_filename(filename):
     if not os.path.exists(filename):
-        raise FileExistsError(
-            f"'{filename}' not found. Check the file name and path."
-        )
+        raise FileExistsError(f"'{filename}' not found. Check the file name and path.")
     return filename
 
 

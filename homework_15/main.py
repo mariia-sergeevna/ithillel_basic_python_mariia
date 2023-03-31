@@ -4,7 +4,13 @@ from copy import copy
 from typing import Union
 
 from utilities.wrapper import verbose_mode
-from utilities.input import validate_age, validate_str, get_input_choice_menu, input_value, validate_filename
+from utilities.input import (
+    validate_age,
+    validate_str,
+    get_input_choice_menu,
+    input_value,
+    validate_filename,
+)
 from utilities.field import Field
 
 
@@ -78,7 +84,9 @@ class PhoneBook:
             surname=input_value("Enter surname: ", validate_str, Field.SURNAME),
             name=input_value("Enter name: ", validate_str, Field.NAME),
             age=input_value("Enter age: ", validate_age),
-            phone_number=input_value("Enter phone num.: ", validate_str, Field.PHONE_NUMBER),
+            phone_number=input_value(
+                "Enter phone num.: ", validate_str, Field.PHONE_NUMBER
+            ),
             email=input_value("Enter email: ", validate_str, Field.EMAIL),
         )
         self.records.append(record)
@@ -238,11 +246,15 @@ class Menu:
             filename = input_value(f"Enter filename to {action}: ", validate_filename)
         else:
             choice = {"y": True, "n": False}
-            print(f"Do you want to {action} current file or other? "
-                  "Press 'y' for current file and 'n' for new file")
+            print(
+                f"Do you want to {action} current file or other? "
+                "Press 'y' for current file and 'n' for new file"
+            )
             user_choice = get_input_choice_menu(choice)
             if user_choice == "n":
-                filename = input_value(f"Enter filename to {action}: ", validate_filename)
+                filename = input_value(
+                    f"Enter filename to {action}: ", validate_filename
+                )
 
         return filename
 
@@ -267,21 +279,21 @@ class Menu:
         while True:
             try:
                 menu = {
-                        "1": phonebook.display_phonebook,
-                        "2": phonebook.display_phonebook_sorted_by_age,
-                        "3": phonebook.add_record_to_phonebook,
-                        "4": phonebook.find_record_by_name,
-                        "5": phonebook.find_record_by_age,
-                        "6": phonebook.find_record_by_email,
-                        "7": phonebook.delete_record_by_name,
-                        "8": phonebook.delete_record_by_surname,
-                        "9": phonebook.count_all_entries_in_phonebook,
-                        "10": phonebook.avr_age_of_all_persons,
-                        "11": phonebook.increase_age,
-                        "0": self.finish_program,
-                        "s": phonebook.save_to_file,
-                        "l": phonebook.load_from_file,
-                    }
+                    "1": phonebook.display_phonebook,
+                    "2": phonebook.display_phonebook_sorted_by_age,
+                    "3": phonebook.add_record_to_phonebook,
+                    "4": phonebook.find_record_by_name,
+                    "5": phonebook.find_record_by_age,
+                    "6": phonebook.find_record_by_email,
+                    "7": phonebook.delete_record_by_name,
+                    "8": phonebook.delete_record_by_surname,
+                    "9": phonebook.count_all_entries_in_phonebook,
+                    "10": phonebook.avr_age_of_all_persons,
+                    "11": phonebook.increase_age,
+                    "0": self.finish_program,
+                    "s": phonebook.save_to_file,
+                    "l": phonebook.load_from_file,
+                }
 
                 self.print_prompt()
                 user_input = get_input_choice_menu(menu)
@@ -309,7 +321,9 @@ class Menu:
 def main():
     parser = argparse.ArgumentParser(description="")
 
-    parser.add_argument("filename", type=str, nargs="?", default=None, help="Path to file_name")
+    parser.add_argument(
+        "filename", type=str, nargs="?", default=None, help="Path to file_name"
+    )
     parser.add_argument(
         "--verbose", action="store_true", help="Display detailed processing info"
     )
