@@ -1,24 +1,21 @@
+import os
 import re
+from typing import Callable
 
 from .field import Field
 
 
-def validate_age(prompt: str, lower_bound: int = 1, upper_bound: int = 99) -> int:
+def validate_age(value, lower_bound: int = 1, upper_bound: int = 99) -> int:
     """Get and check that user input age is valid."""
-    while True:
-        user_input = input(prompt)
-        try:
-            input_age = int(user_input)
-        except ValueError:
-            print(f"Invalid input! '{user_input}' is not an integer value!")
-            continue
-
-        if input_age < lower_bound:
-            print(f"Entered age should be greater than or equal to {lower_bound}")
-        elif input_age > upper_bound:
-            print(f"Entered age should be smaller than or equal to {upper_bound}")
-        else:
-            return input_age
+    if not value.isdigit():
+        raise ValueError(f"Invalid input! '{value}' is not an integer value!")
+    value = int(value)
+    if value < lower_bound:
+        raise ValueError(f"Entered age should be greater than or equal to {lower_bound}")
+    elif value > upper_bound:
+        raise ValueError(f"Entered age should be smaller than or equal to {upper_bound}")
+    else:
+        return value
 
 
 def get_input_choice_menu(option: dict) -> str:
@@ -38,7 +35,7 @@ def get_input_choice_menu(option: dict) -> str:
             )
 
 
-def validate_str(prompt: Field, field: str) -> str:
+def validate_str(field: Field, value) -> bool:
     """
     Get and check that user input is valid for fields: surname, name, phone number, email.
     """
@@ -46,12 +43,33 @@ def validate_str(prompt: Field, field: str) -> str:
         regex = r"[A-Za-z]+"
     elif field == Field.PHONE_NUMBER:
         regex = r"\+1\d{10}$"
-    elif field == Field.EMAIL:
-        regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
     else:
-        raise Exception("Invalid field")
+        regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
+    if re.fullmatch(regex, value):
+        return value
+    else:
+        raise ValueError("Invalid input! Please, enter correct value.")
+
+
+def validate_filename(filename):
+    if not os.path.exists(filename):
+        raise FileExistsError(
+            f"'{filename}' not found. Check the file name and path."
+        )
+    return filename
+
+
+def input_value(prompt: str, validator: Callable, field=None):
     while True:
-        user_input = input(prompt)
-        if re.fullmatch(regex, user_input):
-            return user_input
-        print(f"Invalid input! Please, enter correct {field}.")
+        value = input(prompt)
+        try:
+            if field:
+                value = validator(field, value)
+                return value
+            else:
+                value = validator(value)
+                return value
+        except ValueError as e:
+            print(str(e))
+        except FileExistsError as err:
+            print(str(err))
