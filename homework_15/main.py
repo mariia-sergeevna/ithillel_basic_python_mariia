@@ -4,8 +4,9 @@ import argparse
 from copy import copy
 from typing import Union, Callable, Any
 
-from utilities.wrapper import verbose_start_and_end
+from utilities.wrapper import verbose_mode
 from utilities.input import validate_age, validate_str, get_input_choice_menu
+from utilities.field import Field
 
 
 class Record:
@@ -35,7 +36,7 @@ class Record:
 
     @surname.setter
     def surname(self, user_input: str):
-        self._surname = validate_str("surname", user_input)
+        self._surname = validate_str(Field.SURNAME, user_input)
 
     @property
     def name(self):
@@ -43,7 +44,7 @@ class Record:
 
     @name.setter
     def name(self, user_input: str):
-        self._name = validate_str("name", user_input)
+        self._name = validate_str(Field.NAME, user_input)
 
     @property
     def age(self):
@@ -59,7 +60,7 @@ class Record:
 
     @phone_number.setter
     def phone_number(self, user_input: str):
-        self._phone_number = validate_str("phone_number", user_input)
+        self._phone_number = validate_str(Field.PHONE_NUMBER, user_input)
 
     @property
     def email(self):
@@ -67,7 +68,7 @@ class Record:
 
     @email.setter
     def email(self, user_input: str):
-        self._email = validate_str("email", user_input)
+        self._email = validate_str(Field.EMAIL, user_input)
 
     def display_record(self, number: int) -> None:
         """
@@ -83,8 +84,8 @@ class Record:
         print(f"|  Phone:   {self._phone_number:>20}  |")
         print(f"|  Email:   {self._email:>20}  |")
 
-    def serialize(self) -> dict:
-        """Returns the record information in a serialized form"""
+    def to_dict(self) -> dict:
+        """Returns the record information in a dict form"""
         return {
             "surname": self.surname,
             "name": self.name,
@@ -110,7 +111,7 @@ class PhoneBook:
         self.records = [] if not records else records
         self.verbose = verbose
 
-    @verbose_start_and_end
+    @verbose_mode
     def add_record_to_phonebook(self) -> None:
         """Add 1 record to phone book"""
         record = Record(
@@ -122,7 +123,7 @@ class PhoneBook:
         )
         self.records.append(record)
 
-    @verbose_start_and_end
+    @verbose_mode
     def display_phonebook(self, sorted_records=None) -> None:
         """Print all records from phone book"""
         print("#########  Phone book  ##########")
@@ -131,7 +132,7 @@ class PhoneBook:
         for number, record in enumerate(records):
             record.display_record(number + 1)
 
-    @verbose_start_and_end
+    @verbose_mode
     def display_phonebook_sorted_by_age(self) -> None:
         """
         Displays all the records in the phone book sorted by age in ascending order.
@@ -151,29 +152,29 @@ class PhoneBook:
                 return
         self.display_error(f"Records with {field} '{field_value}' not found")
 
-    @verbose_start_and_end
+    @verbose_mode
     def find_record_by_name(self) -> None:
         user_input = validate_str("Enter name: ", "name")
         self.find_by_field("name", user_input)
 
-    @verbose_start_and_end
+    @verbose_mode
     def find_record_by_age(self) -> None:
         user_input = validate_age("Enter desired age: ")
         self.find_by_field("age", user_input)
 
-    @verbose_start_and_end
+    @verbose_mode
     def find_record_by_email(self) -> None:
         user_input = validate_str("Enter email: ", "email")
         self.find_by_field("email", user_input)
 
-    @verbose_start_and_end
+    @verbose_mode
     def increase_age(self) -> None:
         """Allows to increase age by entered value for each record in phone book"""
         number = validate_age("Enter a number to increase the age: ")
         for record in self.records:
             record._age += number
 
-    @verbose_start_and_end
+    @verbose_mode
     def delete_by_field(self, field, field_value) -> None:
         """Allows to delete record by field name and value"""
         found = False
@@ -184,34 +185,34 @@ class PhoneBook:
         if not found:
             print(f"Records with {field} '{field_value}' not found")
 
-    @verbose_start_and_end
+    @verbose_mode
     def delete_record_by_name(self) -> None:
         input_name = validate_str("Enter name: ", "name")
         self.delete_by_field("name", input_name)
 
-    @verbose_start_and_end
+    @verbose_mode
     def delete_record_by_surname(self) -> None:
         input_surname = validate_str("Enter surname: ", "surname")
         self.delete_by_field("surname", input_surname)
 
-    @verbose_start_and_end
+    @verbose_mode
     def count_all_entries_in_phonebook(self) -> None:
         """Counts the number of entries in the phone book."""
         print("Total number of entries: ", len(self.records))
 
-    @verbose_start_and_end
+    @verbose_mode
     def avr_age_of_all_persons(self) -> None:
         """Calculates the average age of all the persons in the phone book."""
         print(round(sum(record.age for record in self.records) / len(self.records)))
 
-    @verbose_start_and_end
+    @verbose_mode
     def save_to_file(self, filename: str) -> None:
         """Saves the phone book to a file with the given filename."""
-        serialized_phonebook = [record.serialize() for record in self.records]
+        serialized_phonebook = [record.to_dict() for record in self.records]
         with open(filename, "w", encoding="utf8") as f:
             json.dump(serialized_phonebook, f, indent=4)
 
-    @verbose_start_and_end
+    @verbose_mode
     def load_from_file(self, filename: str) -> None:
         """Loads the phone book from a file with the given filename."""
         with open(filename, "r") as f:

@@ -1,5 +1,7 @@
 import re
 
+from .field import Field
+
 
 def validate_age(prompt: str, lower_bound: int = 1, upper_bound: int = 99) -> int:
     """Get and check that user input age is valid."""
@@ -36,15 +38,15 @@ def get_input_choice_menu(option: dict) -> str:
             )
 
 
-def validate_str(prompt: str, field: str) -> str:
+def validate_str(prompt: Field, field: str) -> str:
     """
     Get and check that user input is valid for fields: surname, name, phone number, email.
     """
-    if field == "surname" or field == "name":
+    if field == Field.SURNAME or field == Field.NAME:
         regex = r"[A-Za-z]+"
-    elif field == "phone_number":
+    elif field == Field.PHONE_NUMBER:
         regex = r"\+1\d{10}$"
-    elif field == "email":
+    elif field == Field.EMAIL:
         regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
     else:
         raise Exception("Invalid field")

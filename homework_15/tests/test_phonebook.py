@@ -31,7 +31,7 @@ class SerializeTestCase(unittest.TestCase):
             "email": "nik@gmail.com",
         }
         text_error = "Result after serialize must be dict with class attributes"
-        self.assertEqual(record.serialize(), expected_result, text_error)
+        self.assertEqual(record.to_dict(), expected_result, text_error)
 
 
 class DeleteTestCase(unittest.TestCase):
