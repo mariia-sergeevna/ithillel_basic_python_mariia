@@ -47,12 +47,13 @@ def validate_str(field: Field, value) -> bool:
         regex = r"[A-Za-z]+"
     elif field == Field.PHONE_NUMBER:
         regex = r"\+1\d{10}$"
-    else:
+    elif field == Field.EMAIL:
         regex = r"[\w.-]+@[A-Za-z]+\.[a-z]{2,}"
+    else:
+        raise Exception("Invalid field")
     if re.fullmatch(regex, value):
         return value
-    else:
-        raise ValueError("Invalid input! Please, enter correct value.")
+    raise ValueError("Invalid input! Please, enter correct value.")
 
 
 def validate_filename(filename):
